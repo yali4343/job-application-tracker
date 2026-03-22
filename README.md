@@ -1,5 +1,7 @@
 # 📊 Job Application Tracker
 
+<p align="center"> <img src="https://komarev.com/ghpvc/?username=job-application-tracker&label=Repo%20views&color=0e75b6&style=flat"  /></p>
+
 A modern full-stack application for tracking and managing job applications throughout your career search. Built with a focus on clarity, performance, and user experience.
 
 Track applications, monitor their progress, and stay organized during your job search with an intuitive dashboard and powerful filtering capabilities.
