@@ -19,11 +19,13 @@ build/
 *.swp
 *.swo
 *.sublime-workspace
-.DS_Store
 
 # OS
 .DS_Store
+.AppleDouble
+.LSOverride
 Thumbs.db
+ehthumbs.db
 
 # Logs
 logs/
@@ -35,16 +37,35 @@ lerna-debug.log*
 *.db
 
 # Prisma
-prisma/.migrations/
+.prisma/
 
-# Test coverage
+# Test coverage & results
 coverage/
 .nyc_output/
+*.lcov
+test-results/
+jest-results.json
+
+# Cache files
+.cache/
+.eslintcache
+.stylelintcache
+.turbo/
+
+# Temp & temporary files
+tmp/
+temp/
+*.tmp
+
+# Node/Package managers
+pnpm-lock.yaml
+.pnpm-store/
 
 # Misc
-.cache/
 .env.test
 pids/
 *.pid
 *.seed
 *.pid.lock
+.env.production.local
+*.tsbuildinfo
