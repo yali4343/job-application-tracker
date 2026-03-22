@@ -9,6 +9,7 @@ import { ProtectedRoute, PublicRoute } from "./components/ProtectedRoute.jsx";
 import { LoginPage } from "./pages/LoginPage.jsx";
 import { RegisterPage } from "./pages/RegisterPage.jsx";
 import { DashboardPage } from "./pages/DashboardPage.jsx";
+import { ApplicationFormPage } from "./pages/ApplicationFormPage.jsx";
 
 function App() {
   return (
@@ -39,6 +40,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/applications/new"
+            element={
+              <ProtectedRoute>
+                <ApplicationFormPage />
               </ProtectedRoute>
             }
           />

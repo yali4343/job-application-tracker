@@ -205,19 +205,66 @@ npx prisma studio       # Open Prisma Studio GUI
 
 ✅ Phase 1: Backend & Frontend setup, Prisma configuration  
 ✅ Phase 2: Authentication (register, login, JWT middleware)  
-⏳ Phase 3: Applications CRUD endpoints (in progress)  
-⏳ Phase 4: React auth UI & dashboard  
+✅ Phase 3: Applications CRUD endpoints & protected dashboard UI  
+⏳ Phase 4: Application form (create/edit) UI  
 ⏳ Phase 5: Polish, deploy, documentation
+
+## Frontend Architecture
+
+### Pages
+- **LoginPage** - Email/password login form
+- **RegisterPage** - Name/email/password registration form
+- **DashboardPage** - Protected dashboard with application management
+
+### Components
+- **ProtectedRoute & PublicRoute** - Route guards for auth state
+- **ApplicationList** - Card-based display of applications with edit/delete
+- **FilterBar** - Search and status filter controls
+
+### Services
+- **api.js** - Axios instance with automatic JWT token injection via interceptor
+- **authService.js** - Login/register API calls
+- **applicationService.js** - CRUD operations for applications (GET, POST, PUT, DELETE)
+
+### Context
+- **AuthContext** - Manages JWT token and user state, persists to localStorage
+- **useAuth()** - Custom hook for accessing auth state in components
+
+## Features Implemented
+
+### Authentication (Phase 2 ✅)
+- User registration with name, email, password
+- User login with email, password
+- JWT token management (stored in localStorage)
+- Automatic token attachment to all API requests
+- Auto-logout on 401 unauthorized responses
+- Persistent login across page reloads
+
+### Application Management (Phase 3 ✅)
+- **List applications** - View all user's job applications
+- **Search** - Filter applications by company, position, or notes (case-insensitive)
+- **Status filter** - Filter by application status (APPLIED, INTERVIEW, OFFER, REJECTED)
+- **Delete applications** - Remove applications with confirmation
+- **Visual indicators** - Status badges with color coding
+- **Empty state** - Friendly message when no applications exist
+
+### Dashboard
+- Welcome greeting with application count
+- Application list with company, position, status, applied date, and notes
+- Inline edit/delete controls per application
+- Error handling with dismissible notification banners
+- Logout button in header
 
 ## Future Enhancements
 
-- Search functionality
-- Status filtering & sorting
-- Dashboard with application counters
-- Better form validation
-- Application status timeline
+- Application creation form (UI)
+- Application editing form (UI)
+- Application counters by status
+- Better form validation with feedback
+- Application status timeline/history
 - Email notifications
 - File attachments for applications
+- Advanced sorting options
 
 ## License
 
