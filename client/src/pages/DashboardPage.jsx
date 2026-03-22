@@ -70,8 +70,7 @@ export function DashboardPage() {
   };
 
   const handleEditApplication = (id) => {
-    // Placeholder for future "edit application" page
-    alert(`Edit application ${id} - coming soon!`);
+    navigate(`/applications/${id}/edit`);
   };
 
   const handleDeleteApplication = async (id) => {
