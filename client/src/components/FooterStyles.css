@@ -1,0 +1,165 @@
+/* ============================================================================
+   Footer Component Styles - Contact & Social Section
+   ============================================================================ */
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-bg-primary);
+  border-top: 0.5px solid var(--color-border);
+  padding: var(--space-3) 0;
+  z-index: 999;
+  box-shadow: 0 -1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.footer-content {
+  width: 100%;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+/* Left section - Contact text */
+.footer-left {
+  display: flex;
+  align-items: center;
+}
+
+.footer-text {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Right section - Contact icons */
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.footer-contact-button {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 0.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--duration-fast) var(--ease-out);
+  position: relative;
+}
+
+.footer-contact-button:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-border);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+}
+
+.footer-contact-button:focus {
+  outline: 2px solid transparent;
+  box-shadow:
+    0 0 0 2px var(--color-bg-primary),
+    0 0 0 4px var(--color-accent);
+}
+
+.footer-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Specific button styling */
+.footer-contact-button.email:hover {
+  border-color: var(--color-info);
+  background: var(--color-info-light);
+}
+
+.footer-contact-button.github:hover {
+  border-color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+}
+
+.footer-contact-button.linkedin:hover {
+  border-color: #0a66c2;
+  background: #e7f3ff;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .footer-content {
+    padding: 0 var(--space-3);
+    gap: var(--space-4);
+  }
+
+  .footer-left {
+    display: none;
+  }
+
+  .footer-right {
+    gap: var(--space-2);
+    margin-left: auto;
+  }
+
+  .footer-contact-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .footer-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: var(--space-2) 0;
+  }
+
+  .footer-content {
+    padding: 0 var(--space-2);
+    gap: var(--space-2);
+  }
+
+  .footer-contact-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .footer-icon {
+    font-size: 14px;
+  }
+
+  .footer-right {
+    gap: 0;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .footer-contact-button.email:hover {
+    background: var(--color-info-light);
+  }
+
+  .footer-contact-button.linkedin:hover {
+    background: var(--color-info-light);
+  }
+}

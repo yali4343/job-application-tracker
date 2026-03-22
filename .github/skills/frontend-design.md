@@ -216,6 +216,157 @@ Dark interfaces have different needs:
 
 ---
 
+## Navigation Bar Component
+
+The navigation bar is the primary wayfinding tool and sets the tone for the entire application. It should be minimal, functional, and purposeful.
+
+### Navigation Structure
+
+- **Position:** Fixed top, full-width
+- **Height:** 56px (4px grid alignment)
+- **Background:** Match the design direction (light/dark appropriately)
+- **Border:** Subtle bottom border `0.5px solid rgba(0,0,0,0.08)` for definition without weight
+
+### Navigation Content
+
+- **Left section:** Brand/logo (24x24px icon or 120px logo mark) with 16px padding
+- **Center section:** Navigation links (if applicable) or empty space for product focus
+- **Right section:** User context, settings, or auth controls with consistent spacing
+
+### Navigation Typography & Spacing
+
+- **Font:** System font, 13px, 500 weight
+- **Link spacing:** 16px horizontal, 12px vertical padding per item
+- **Hover state:** Text color shift, no background color change — preserve minimalism
+- **Active state:** Subtle left border `2px solid` at accent color, or underline with 2px weight
+
+### Responsive Behavior
+
+- **Desktop (1024px+):** Full horizontal layout, all items visible
+- **Tablet (640px-1023px):** Condensed layout, secondary items in dropdown
+- **Mobile (<640px):** Hamburger menu with side navigation drawer
+
+---
+
+## Home Component
+
+The home component serves as the application's entry point and should communicate purpose, value, and clear next steps.
+
+### Hero Section
+
+- **Layout:** Centered or split-panel depending on product direction
+- **Typography:**
+  - Primary headline: 32px-48px, 600 weight, tight letter-spacing (-0.02em)
+  - Subheading: 16px-18px, 400 weight, secondary color
+  - Body text: 14px, 400 weight, muted color
+- **Spacing:** 32px between headline and subheading, 24px before body copy
+- **Space allocation:** Top 64px padding, bottom 48px padding
+- **Call-to-action:** Primary button with 16px padding, full or constrained width (320px max on mobile)
+
+### Feature Cards (if applicable)
+
+- **Grid:** 3 columns on desktop, 2 on tablet, 1 on mobile
+- **Card structure:** 200px width, 16px padding, `0.5px solid rgba(0,0,0,0.08)` border
+- **Icon:** 24px, secondary color, 12px bottom margin
+- **Headline:** 14px, 600 weight
+- **Description:** 13px, 400 weight, muted color
+- **Gap between cards:** 16px
+
+### Value Proposition
+
+What does this application do? Answer clearly:
+
+- **Problem solved:** State it directly in headline
+- **Main benefit:** Lead with outcome, not features
+- **Visual clarity:** Use negative space, not decoration
+- **Call-to-action clarity:** Primary action should be obvious at glance
+
+---
+
+## Contact & Footer Section (Bottom Navigation)
+
+The footer serves multiple purposes: branding, contact, and optional secondary navigation. Design it as a connected experience, not a content dump.
+
+### Footer Layout
+
+- **Position:** Fixed bottom or sticky above page bottom (depending on content height)
+- **Height:** 64px minimum (4px grid: 16px top + 32px bottom or 16px all sides)
+- **Background:** Match navbar background for visual coherence
+- **Border:** Top border `0.5px solid rgba(0,0,0,0.08)` to separate from content
+- **Layout:** Flex row, space-between distribution
+
+### Contact Section (Left/Center)
+
+- **Text:** "Let's connect" or minimal introductory text, 13px, 500 weight, secondary color
+- **Spacing:** 16px between text and contact items
+
+### Contact Icons (Right/Center)
+
+Display contact methods as icon buttons with hover states:
+
+```css
+/* Icon button base */
+width: 40px;
+height: 40px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+border-radius: 6px;
+border: 0.5px solid rgba(0, 0, 0, 0.08);
+background: transparent;
+cursor: pointer;
+transition: all 150ms cubic-bezier(0.25, 1, 0.5, 1);
+
+/* Icon size */
+icon-width: 18px;
+icon-height: 18px;
+color: secondary-color;
+
+/* Hover state */
+&:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: accent-color;
+}
+```
+
+### Contact Items (Using Phosphor Icons)
+
+- **Email:** `IconEnvelopeOpen` (Phosphor) + `yali4343@gmail.com`
+  - Action: Clicking opens default email client: `mailto:yali4343@gmail.com`
+  - Tooltip: "Send email"
+
+- **GitHub:** `IconGithubLogo` (Phosphor) + `yali4343`
+  - Link: `https://github.com/yali4343`
+  - Tooltip: "Visit GitHub profile"
+  - Opens in new tab
+
+- **LinkedIn:** `IconLinkedinLogo` (Phosphor) + optional text
+  - Link: `https://www.linkedin.com/in/yali-katz`
+  - Tooltip: "Visit LinkedIn profile"
+  - Opens in new tab
+
+### Contact Spacing & Alignment
+
+- **Gap between contact items:** 12px
+- **Icon to text (if text shown):** 6px
+- **Footer padding:** 12px right, 16px left (or symmetric 16px based on layout preference)
+- **Total footer right section width:** ~160px (flexible based on layout)
+
+### Responsive Behavior
+
+- **Desktop:** Icons + optional text labels visible
+- **Tablet:** Icons only, tooltips on hover
+- **Mobile:** Stack vertically or use horizontal scroll if space constrained
+
+### Visual Consistency
+
+- **Icon style:** Phosphor Icons, weight: `400`, size: `18px` (scale to `20px` for prominence)
+- **Color:** Match secondary text color normally, accent color on hover
+- **Focus state:** Keyboard navigation must show clear focus ring: `0 0 0 2px rgba(accent-color, 0.2)`
+
+---
+
 ## Anti-Patterns
 
 ### Never Do This
