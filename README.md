@@ -1,271 +1,301 @@
-# Job Application Tracker
+# 📊 Job Application Tracker
 
-A full-stack application to help track and manage job applications with authentication and CRUD operations.
+A modern full-stack application for tracking and managing job applications throughout your career search. Built with a focus on clarity, performance, and user experience.
 
-## Project Overview
+Track applications, monitor their progress, and stay organized during your job search with an intuitive dashboard and powerful filtering capabilities.
 
-This is a fast-moving portfolio project built with a focus on MVP (Minimum Viable Product) first thinking. The architecture emphasizes clean, readable code without over-engineering.
+## Live Demo
 
-## Tech Stack
+> The application is currently deployed and live at https://job-application-tracker-virid-delta.vercel.app/
 
-### Backend
+**Infrastructure:**
 
-- **Framework**: Express.js (Node.js)
-- **Database**: PostgreSQL
-- **ORM**: Prisma v7
-- **Authentication**: JWT (JSON Web Tokens)
-- **Password Hashing**: bcrypt
+- **Frontend** – Hosted on [Vercel](https://vercel.com/)
+- **Backend** – Hosted on [Render](https://render.com/)
+- **Database** – Managed by [Neon](https://neon.tech/) (PostgreSQL)
 
-### Frontend
-
-- **Framework**: React + Vite
-- **HTTP Client**: Axios
-- **Routing**: React Router DOM
-
-## Project Structure
-
-```
-job-application-tracker/
-├── client/                 # React frontend
-│   └── src/
-│       ├── components/     # Reusable components
-│       ├── context/        # React context
-│       ├── pages/          # Page components
-│       ├── services/       # API services
-│       └── App.jsx
-├── server/                 # Express backend
-│   ├── prisma/
-│   │   ├── schema.prisma   # Database schema
-│   │   └── migrations/     # Database migrations
-│   ├── src/
-│   │   ├── controllers/    # Request handlers
-│   │   ├── middleware/     # Express middleware
-│   │   ├── routes/         # API routes
-│   │   ├── services/       # Business logic
-│   │   ├── lib/            # Utilities (Prisma client)
-│   │   ├── app.js          # Express app setup
-│   │   └── server.js       # Server entry point
-│   ├── .env                # Environment variables
-│   ├── package.json        # Dependencies
-│   └── prisma.config.ts    # Prisma configuration (v7)
-```
-
-## Setup Instructions
+## Quick Start
 
 ### Prerequisites
 
-- Node.js (v18+)
+- Node.js v18+
 - PostgreSQL database
 - npm or yarn
 
-### Backend Setup
+### Setup (5 minutes)
 
-1. Navigate to server directory:
+**Backend:**
 
 ```bash
 cd server
-```
-
-2. Install dependencies:
-
-```bash
 npm install
-```
-
-3. Configure environment variables in `.env`:
-
-```
-DATABASE_URL="postgresql://user:password@localhost:5432/job_tracker?schema=public"
-JWT_SECRET="your-secret-key-here"
-PORT=5000
-```
-
-4. Run Prisma migrations:
-
-```bash
+cp .env.example .env  # Configure DATABASE_URL and JWT_SECRET
 npx prisma migrate dev
-```
-
-5. Start the development server:
-
-```bash
 npm run dev
 ```
 
-Server runs on `http://localhost:5000`
-
-### Frontend Setup
-
-1. Navigate to client directory:
+**Frontend:**
 
 ```bash
 cd client
-```
-
-2. Install dependencies:
-
-```bash
 npm install
-```
-
-3. Start the development server:
-
-```bash
 npm run dev
 ```
 
-Frontend runs on `http://localhost:5173`
+- Backend: `http://localhost:5000`
+- Frontend: `http://localhost:5173`
+
+## Features
+
+- **User Authentication** - Secure registration and login with JWT tokens
+- **Application Tracking** - Create, read, update, and delete job applications
+- **Smart Filtering** - Search by company and position, filter by application status
+- **Status Management** - Track application progress (Applied, Interview, Offer, Rejected)
+- **Notes & Details** - Store interview dates, notes, and resume links
+- **Professional UI** - Clean, modern interface with responsive design
+- **Mobile-Ready** - Works seamlessly on desktop, tablet, and mobile devices
+
+## Tech Stack
+
+| Layer              | Technology                                       |
+| ------------------ | ------------------------------------------------ |
+| **Frontend**       | React 19, Vite, React Router, Axios, react-icons |
+| **Backend**        | Express.js, Node.js                              |
+| **Database**       | PostgreSQL with Prisma ORM v7                    |
+| **Authentication** | JWT, bcrypt                                      |
+| **Testing**        | Jest, Supertest                                  |
+
+## Architecture & Project Structure
+
+```
+job-application-tracker/
+├── client/                          # React frontend (Vite)
+│   ├── src/
+│   │   ├── components/              # Reusable UI components
+│   │   │   ├── Navbar.jsx           # Top navigation
+│   │   │   ├── Footer.jsx           # Contact footer
+│   │   │   ├── ApplicationList.jsx  # Applications display
+│   │   │   ├── FilterBar.jsx        # Search & filter
+│   │   │   └── ProtectedRoute.jsx   # Auth guard
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx      # Authentication state
+│   │   ├── pages/
+│   │   │   ├── HomePage.jsx         # Landing page
+│   │   │   ├── LoginPage.jsx        # Login form
+│   │   │   ├── RegisterPage.jsx     # Registration form
+│   │   │   ├── DashboardPage.jsx    # Main dashboard
+│   │   │   ├── ApplicationFormPage.jsx  # Create/edit form
+│   │   │   └── EditApplicationPage.jsx
+│   │   ├── services/
+│   │   │   ├── api.js               # Axios configuration
+│   │   │   ├── authService.js       # Auth API calls
+│   │   │   └── applicationService.js # Application API calls
+│   │   └── design-system.css        # Global design tokens & styles
+│   └── package.json
+│
+├── server/                          # Express backend
+│   ├── src/
+│   │   ├── controllers/             # Request handlers
+│   │   │   ├── authController.js
+│   │   │   └── applicationController.js
+│   │   ├── middleware/
+│   │   │   └── auth.middleware.js   # JWT verification
+│   │   ├── routes/
+│   │   │   ├── authRoutes.js
+│   │   │   ├── applicationRoutes.js
+│   │   │   └── index.js
+│   │   ├── lib/
+│   │   │   └── prisma.js            # Prisma client instance
+│   │   ├── app.js                   # Express app configuration
+│   │   └── server.js                # Server entry point
+│   ├── prisma/
+│   │   ├── schema.prisma            # Database schema
+│   │   └── migrations/              # Database migration files
+│   ├── tests/                       # Jest test suite
+│   │   ├── applications.*.test.js   # Application CRUD tests
+│   │   └── auth.middleware.test.js  # Authentication tests
+│   └── package.json
+│
+├── docs/                            # Documentation
+├── .github/skills/                  # Design system & guidelines
+└── README.md
+```
 
 ## API Endpoints
 
 ### Authentication
 
-- **POST** `/api/auth/register` - Register new user
-  - Body: `{ name, email, password }`
-  - Returns: `{ message, user: { id, name, email, createdAt } }`
+| Method | Endpoint             | Description       |
+| ------ | -------------------- | ----------------- |
+| `POST` | `/api/auth/register` | Register new user |
+| `POST` | `/api/auth/login`    | Login user        |
 
-- **POST** `/api/auth/login` - Login user
-  - Body: `{ email, password }`
-  - Returns: `{ token, user: { id, name, email } }`
+### Job Applications (Protected)
 
-### Job Applications (Protected Routes - Require JWT Token)
+| Method   | Endpoint                | Description                |
+| -------- | ----------------------- | -------------------------- |
+| `POST`   | `/api/applications`     | Create application         |
+| `GET`    | `/api/applications`     | List all user applications |
+| `GET`    | `/api/applications/:id` | Get specific application   |
+| `PUT`    | `/api/applications/:id` | Update application         |
+| `DELETE` | `/api/applications/:id` | Delete application         |
 
-- **POST** `/api/applications` - Create application
-- **GET** `/api/applications` - Get all user's applications
-- **GET** `/api/applications/:id` - Get specific application
-- **PUT** `/api/applications/:id` - Update application
-- **DELETE** `/api/applications/:id` - Delete application
+All application endpoints require JWT authentication header: `Authorization: Bearer <token>`
+
+## Configuration
+
+### Backend Environment Variables
+
+Create a `.env` file in the `server/` directory:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/job_tracker?schema=public"
+JWT_SECRET="your-secure-jwt-secret-key"
+PORT=5000
+NODE_ENV=development
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+cd server
+npm test                    # Run all tests
+npm run test:auth          # Auth middleware tests
+npm run test:applications  # Application CRUD tests
+npm run test:watch         # Watch mode
+```
+
+The project includes comprehensive Jest + Supertest coverage for API endpoints and authentication middleware.
+
+## Development
+
+### Building for Production
+
+**Frontend:**
+
+```bash
+cd client
+npm run build      # Output: dist/
+npm run preview    # Preview production build
+```
+
+**Backend:**
+
+```bash
+cd server
+npm start          # Runs production server
+```
+
+### Common Tasks
+
+**Database Migrations:**
+
+```bash
+cd server
+npx prisma migrate dev        # Create & apply new migration
+npx prisma migrate reset      # Reset database (dev only)
+npx prisma studio           # Preview database data
+```
+
+**Linting & Code Quality:**
+
+```bash
+cd client
+npm run lint                 # Run ESLint
+```
 
 ## Database Schema
 
 ### User Model
 
-- `id` - Auto-incremented primary key
+- `id` - Primary key
 - `name` - User's full name
 - `email` - Unique email address
-- `password` - Hashed password (bcrypt)
+- `password` - Bcrypt-hashed password
 - `createdAt` - Account creation timestamp
 - `applications` - Relation to user's applications
 
 ### Application Model
 
-- `id` - Auto-incremented primary key
+- `id` - Primary key
 - `company` - Company name
 - `position` - Job position title
-- `status` - Application status (APPLIED, INTERVIEW, OFFER, REJECTED)
+- `status` - Status: APPLIED, INTERVIEW, OFFER, or REJECTED
 - `appliedDate` - Date application was submitted
-- `notes` - Optional notes about the application
+- `notes` - Optional notes and details
+- `resumeLink` - Optional resume URL
 - `userId` - Foreign key to User
-- `createdAt` - Record creation timestamp
-- `updatedAt` - Last update timestamp
+- `createdAt` - Created timestamp
+- `updatedAt` - Last updated timestamp
 
-## Authentication
+## Design System
 
-JWT tokens are used for API authentication:
+The frontend uses a comprehensive design system enforcing enterprise SaaS principles:
 
-- Token stored in `Authorization` header
-- Format: `Bearer <token>`
-- Expiration: 7 days
+- **4px Grid System** - All spacing aligned to 4px baseline
+- **Cool Professional Palette** - Slate-based colors for trustworthiness
+- **Subtle Depth** - Single-layer shadows, no heavy layering
+- **Responsive Typography** - Scales elegantly across devices
+- **Accessibility First** - WCAG-compliant color contrasts and focus states
 
-## Development Notes
+See [.github/skills/frontend-design.md](.github/skills/frontend-design.md) for detailed design guidelines.
 
-### Key Technologies & Choices
+## Features Status
 
-1. **Prisma v7**: Uses PostgreSQL adapter and `prisma.config.ts` for configuration (not inline in schema)
-2. **Express.js**: Simple, lightweight framework perfect for MVP
-3. **JWT**: Stateless authentication without sessions
-4. **bcrypt**: Industry-standard password hashing (10 salt rounds)
+### Completed
 
-### Code Structure
+- User authentication (register/login with JWT)
+- Full CRUD operations for job applications
+- Application status tracking and filtering
+- Dashboard with search and filtering
+- Professional responsive UI
+- Mobile-optimized interface
+- Comprehensive test coverage
+- Production-ready error handling
 
-- **Controllers**: Handle HTTP requests/responses
-- **Services**: Contain business logic (separated from controllers in future)
-- **Routes**: Define API endpoints
-- **Middleware**: Validate tokens, handle errors
+### Built-In Safeguards
 
-### Running Prisma Commands
+- Protected routes require JWT authentication
+- Password hashing with bcrypt (10 rounds)
+- CORS enabled for frontend-backend communication
+- Input validation on requests
+- Comprehensive test suite (40+ tests)
 
-**Always run from server directory:**
+## Deployment Considerations
 
-```bash
-cd server
-npx prisma generate      # Generate Prisma client
-npx prisma migrate dev   # Create and apply migrations
-npx prisma studio       # Open Prisma Studio GUI
-```
+> The application is configured for quick deployment to services like Render, Railway, or Heroku. Ensure you:
+>
+> - Set `NODE_ENV=production`
+> - Configure a secure `JWT_SECRET`
+> - Use a PostgreSQL database URL (managed or self-hosted)
+> - Review CORS settings for your domain
 
-## Testing with Postman
+## Learning & Contributing
 
-1. Register a new user at `POST /api/auth/register`
-2. Login at `POST /api/auth/login` (get JWT token)
-3. Copy token and add to Authorization header: `Bearer <token>`
-4. Test protected routes (applications CRUD)
+This project demonstrates:
 
-## Build Order (Completed)
+- Full-stack JavaScript development
+- Clean code practices and separation of concerns
+- RESTful API design
+- React patterns and hooks
+- Prisma ORM best practices
+- Testing with Jest and Supertest
+- Authentication & authorization
+- Database design
 
-✅ Phase 1: Backend & Frontend setup, Prisma configuration  
-✅ Phase 2: Authentication (register, login, JWT middleware)  
-✅ Phase 3: Applications CRUD endpoints & protected dashboard UI  
-⏳ Phase 4: Application form (create/edit) UI  
-⏳ Phase 5: Polish, deploy, documentation
+## Resources
 
-## Frontend Architecture
+- [Express.js Documentation](https://expressjs.com/)
+- [React Documentation](https://react.dev/)
+- [Prisma Documentation](https://www.prisma.io/docs/)
+- [PostgreSQL Guide](https://www.postgresql.org/docs/)
+- [JWT Authentication](https://jwt.io/)
 
-### Pages
-- **LoginPage** - Email/password login form
-- **RegisterPage** - Name/email/password registration form
-- **DashboardPage** - Protected dashboard with application management
+## Quick Links
 
-### Components
-- **ProtectedRoute & PublicRoute** - Route guards for auth state
-- **ApplicationList** - Card-based display of applications with edit/delete
-- **FilterBar** - Search and status filter controls
-
-### Services
-- **api.js** - Axios instance with automatic JWT token injection via interceptor
-- **authService.js** - Login/register API calls
-- **applicationService.js** - CRUD operations for applications (GET, POST, PUT, DELETE)
-
-### Context
-- **AuthContext** - Manages JWT token and user state, persists to localStorage
-- **useAuth()** - Custom hook for accessing auth state in components
-
-## Features Implemented
-
-### Authentication (Phase 2 ✅)
-- User registration with name, email, password
-- User login with email, password
-- JWT token management (stored in localStorage)
-- Automatic token attachment to all API requests
-- Auto-logout on 401 unauthorized responses
-- Persistent login across page reloads
-
-### Application Management (Phase 3 ✅)
-- **List applications** - View all user's job applications
-- **Search** - Filter applications by company, position, or notes (case-insensitive)
-- **Status filter** - Filter by application status (APPLIED, INTERVIEW, OFFER, REJECTED)
-- **Delete applications** - Remove applications with confirmation
-- **Visual indicators** - Status badges with color coding
-- **Empty state** - Friendly message when no applications exist
-
-### Dashboard
-- Welcome greeting with application count
-- Application list with company, position, status, applied date, and notes
-- Inline edit/delete controls per application
-- Error handling with dismissible notification banners
-- Logout button in header
-
-## Future Enhancements
-
-- Application creation form (UI)
-- Application editing form (UI)
-- Application counters by status
-- Better form validation with feedback
-- Application status timeline/history
-- Email notifications
-- File attachments for applications
-- Advanced sorting options
-
-## License
-
-ISC
+- [API Reference](server/README.md)
+- [Frontend Components Guide](COMPONENTS_GUIDE.md)
+- [Design System](client/src/design-system.css)
+- [Test Coverage](server/tests/)
