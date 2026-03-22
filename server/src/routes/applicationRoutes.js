@@ -4,6 +4,7 @@ import {
   getApplications,
   getApplication,
   updateApplication,
+  deleteApplication,
 } from "../controllers/applicationController.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 
@@ -20,5 +21,8 @@ router.get("/:id", verifyToken, getApplication);
 
 // PUT /api/applications/:id - Update an application (requires authentication and ownership)
 router.put("/:id", verifyToken, updateApplication);
+
+// DELETE /api/applications/:id - Delete an application (requires authentication and ownership)
+router.delete("/:id", verifyToken, deleteApplication);
 
 export default router;

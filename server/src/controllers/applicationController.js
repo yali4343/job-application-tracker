@@ -305,3 +305,50 @@ export async function updateApplication(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * Delete an application
+ * Only the owner can delete their application
+ * Returns 404 if not found or belongs to another user (do not expose existence)
+ */
+export async function deleteApplication(req, res, next) {
+  try {
+    const { id } = req.params;
+    const userId = req.user.userId;
+
+    // Validate and parse id
+    const parsedId = Number(id);
+    if (Number.isNaN(parsedId) || parsedId <= 0) {
+      return res.status(400).json({
+        message: "Application ID must be a valid positive number",
+      });
+    }
+
+    // Verify the application exists and belongs to the user
+    const existingApplication = await prisma.application.findFirst({
+      where: {
+        id: parsedId,
+        userId,
+      },
+    });
+
+    if (!existingApplication) {
+      return res.status(404).json({
+        message: "Application not found",
+      });
+    }
+
+    // Delete application
+    await prisma.application.delete({
+      where: {
+        id: parsedId,
+      },
+    });
+
+    return res.status(200).json({
+      message: "Application deleted successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
