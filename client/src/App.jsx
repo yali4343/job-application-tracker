@@ -11,6 +11,8 @@ import { RegisterPage } from "./pages/RegisterPage.jsx";
 import { DashboardPage } from "./pages/DashboardPage.jsx";
 import { ApplicationFormPage } from "./pages/ApplicationFormPage.jsx";
 import { EditApplicationPage } from "./pages/EditApplicationPage.jsx";
+import "./design-system.css";
+import "./App.css";
 
 function App() {
   return (

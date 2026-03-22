@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../components/ComponentStyles.css";
 
 /**
  * FilterBar component for searching and filtering applications
@@ -31,22 +32,25 @@ export function FilterBar({ onSearch, onStatusFilter, onReset }) {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.filterGroup}>
+    <div className="filter-bar">
+      <div className="filter-group">
+        <label htmlFor="search">Search</label>
         <input
+          id="search"
           type="text"
           placeholder="Search by company, position, or notes..."
           value={searchQuery}
           onChange={handleSearchChange}
-          style={styles.searchInput}
+          className="input"
         />
       </div>
 
-      <div style={styles.filterGroup}>
+      <div className="filter-group">
+        <label htmlFor="status">Status</label>
         <select
+          id="status"
           value={selectedStatus}
           onChange={handleStatusChange}
-          style={styles.statusSelect}
         >
           <option value="">All statuses</option>
           {statuses.map((status) => (
@@ -58,54 +62,12 @@ export function FilterBar({ onSearch, onStatusFilter, onReset }) {
       </div>
 
       {(searchQuery || selectedStatus) && (
-        <button onClick={handleReset} style={styles.resetButton}>
-          Clear filters
-        </button>
+        <div className="filter-actions">
+          <button onClick={handleReset} className="button button-secondary">
+            Clear filters
+          </button>
+        </div>
       )}
     </div>
   );
 }
-
-const styles = {
-  container: {
-    display: "flex",
-    gap: "1rem",
-    alignItems: "center",
-    flexWrap: "wrap",
-    marginBottom: "2rem",
-  },
-  filterGroup: {
-    flex: "1",
-    minWidth: "200px",
-  },
-  searchInput: {
-    width: "100%",
-    padding: "0.75rem 1rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "8px",
-    fontSize: "0.95rem",
-    fontFamily: "inherit",
-    boxSizing: "border-box",
-  },
-  statusSelect: {
-    width: "100%",
-    padding: "0.75rem 1rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "8px",
-    fontSize: "0.95rem",
-    fontFamily: "inherit",
-    backgroundColor: "white",
-    boxSizing: "border-box",
-  },
-  resetButton: {
-    padding: "0.75rem 1.5rem",
-    backgroundColor: "#6b7280",
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    fontSize: "0.875rem",
-    fontWeight: "600",
-    cursor: "pointer",
-    transition: "background-color 200ms",
-  },
-};

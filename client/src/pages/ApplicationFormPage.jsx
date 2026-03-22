@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createApplication } from "../services/applicationService.js";
+import "../components/ComponentStyles.css";
 
 export function ApplicationFormPage() {
   const navigate = useNavigate();
@@ -69,34 +70,31 @@ export function ApplicationFormPage() {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="form-container">
       {/* Header */}
-      <header style={styles.header}>
-        <h1 style={styles.title}>Job Tracker</h1>
+      <header className="form-header">
+        <h1 className="form-header-title">Job Tracker</h1>
       </header>
 
       {/* Main Content */}
-      <main style={styles.main}>
-        <div style={styles.formCard}>
-          <h2 style={styles.formTitle}>Add New Application</h2>
+      <main className="form-main">
+        <div className="form-card">
+          <h2 className="form-title">Add New Application</h2>
 
           {error && (
-            <div style={styles.errorBanner}>
+            <div className="form-error-banner">
               <span>{error}</span>
-              <button
-                onClick={() => setError("")}
-                style={styles.errorCloseButton}
-              >
+              <button onClick={() => setError("")} className="form-error-close">
                 ×
               </button>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={styles.form}>
+          <form onSubmit={handleSubmit} className="form">
             {/* Company */}
-            <div style={styles.formGroup}>
-              <label htmlFor="company" style={styles.label}>
-                Company <span style={styles.required}>*</span>
+            <div className="form-group">
+              <label htmlFor="company" className="form-label">
+                Company <span className="form-required">*</span>
               </label>
               <input
                 type="text"
@@ -105,15 +103,15 @@ export function ApplicationFormPage() {
                 placeholder="e.g., Google"
                 value={formData.company}
                 onChange={handleChange}
-                style={styles.input}
+                className="form-input"
                 disabled={isLoading}
               />
             </div>
 
             {/* Position */}
-            <div style={styles.formGroup}>
-              <label htmlFor="position" style={styles.label}>
-                Position <span style={styles.required}>*</span>
+            <div className="form-group">
+              <label htmlFor="position" className="form-label">
+                Position <span className="form-required">*</span>
               </label>
               <input
                 type="text"
@@ -122,15 +120,15 @@ export function ApplicationFormPage() {
                 placeholder="e.g., Software Engineer"
                 value={formData.position}
                 onChange={handleChange}
-                style={styles.input}
+                className="form-input"
                 disabled={isLoading}
               />
             </div>
 
             {/* Applied Date */}
-            <div style={styles.formGroup}>
-              <label htmlFor="appliedDate" style={styles.label}>
-                Application Date <span style={styles.required}>*</span>
+            <div className="form-group">
+              <label htmlFor="appliedDate" className="form-label">
+                Application Date <span className="form-required">*</span>
               </label>
               <input
                 type="date"
@@ -138,14 +136,14 @@ export function ApplicationFormPage() {
                 name="appliedDate"
                 value={formData.appliedDate}
                 onChange={handleChange}
-                style={styles.input}
+                className="form-input"
                 disabled={isLoading}
               />
             </div>
 
             {/* Status */}
-            <div style={styles.formGroup}>
-              <label htmlFor="status" style={styles.label}>
+            <div className="form-group">
+              <label htmlFor="status" className="form-label">
                 Status
               </label>
               <select
@@ -153,7 +151,7 @@ export function ApplicationFormPage() {
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
-                style={styles.select}
+                className="form-select"
                 disabled={isLoading}
               >
                 <option value="APPLIED">Applied</option>
@@ -164,8 +162,8 @@ export function ApplicationFormPage() {
             </div>
 
             {/* Job Description */}
-            <div style={styles.formGroup}>
-              <label htmlFor="notes" style={styles.label}>
+            <div className="form-group">
+              <label htmlFor="notes" className="form-label">
                 Job Description
               </label>
               <textarea
@@ -174,15 +172,15 @@ export function ApplicationFormPage() {
                 placeholder="Add the job description..."
                 value={formData.notes}
                 onChange={handleChange}
-                style={styles.textarea}
+                className="form-textarea"
                 disabled={isLoading}
                 rows="4"
               />
             </div>
 
             {/* Resume Link */}
-            <div style={styles.formGroup}>
-              <label htmlFor="resumeLink" style={styles.label}>
+            <div className="form-group">
+              <label htmlFor="resumeLink" className="form-label">
                 Resume Link
               </label>
               <input
@@ -192,16 +190,16 @@ export function ApplicationFormPage() {
                 placeholder="e.g., https://docs.google.com/document/d/..."
                 value={formData.resumeLink}
                 onChange={handleChange}
-                style={styles.input}
+                className="form-input"
                 disabled={isLoading}
               />
             </div>
 
             {/* Buttons */}
-            <div style={styles.buttonGroup}>
+            <div className="form-button-group">
               <button
                 type="submit"
-                style={styles.submitButton}
+                className="button button-success form-submit-btn"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating..." : "Create Application"}
@@ -209,7 +207,7 @@ export function ApplicationFormPage() {
               <button
                 type="button"
                 onClick={handleCancel}
-                style={styles.cancelButton}
+                className="button form-cancel-btn"
                 disabled={isLoading}
               >
                 Cancel
@@ -221,129 +219,3 @@ export function ApplicationFormPage() {
     </div>
   );
 }
-
-const styles = {
-  container: {
-    minHeight: "100vh",
-    backgroundColor: "#f9fafb",
-  },
-  header: {
-    backgroundColor: "#ffffff",
-    borderBottom: "1px solid #e5e7eb",
-    padding: "2rem",
-    textAlign: "center",
-  },
-  title: {
-    fontSize: "1.875rem",
-    fontWeight: "700",
-    color: "#1f2937",
-    margin: "0",
-  },
-  main: {
-    maxWidth: "600px",
-    margin: "2rem auto",
-    padding: "0 1rem",
-  },
-  formCard: {
-    backgroundColor: "#ffffff",
-    borderRadius: "0.5rem",
-    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-    padding: "2rem",
-  },
-  formTitle: {
-    fontSize: "1.5rem",
-    fontWeight: "600",
-    color: "#1f2937",
-    marginBottom: "1.5rem",
-    marginTop: "0",
-  },
-  errorBanner: {
-    backgroundColor: "#fee2e2",
-    color: "#991b1b",
-    padding: "1rem",
-    borderRadius: "0.375rem",
-    marginBottom: "1.5rem",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  errorCloseButton: {
-    backgroundColor: "transparent",
-    border: "none",
-    color: "#991b1b",
-    fontSize: "1.25rem",
-    cursor: "pointer",
-    padding: "0",
-    marginLeft: "1rem",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.5rem",
-  },
-  formGroup: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  label: {
-    fontSize: "0.875rem",
-    fontWeight: "500",
-    color: "#374151",
-    marginBottom: "0.5rem",
-  },
-  required: {
-    color: "#ef4444",
-  },
-  input: {
-    padding: "0.5rem 0.75rem",
-    fontSize: "1rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontFamily: "inherit",
-  },
-  select: {
-    padding: "0.5rem 0.75rem",
-    fontSize: "1rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontFamily: "inherit",
-    backgroundColor: "#ffffff",
-  },
-  textarea: {
-    padding: "0.5rem 0.75rem",
-    fontSize: "1rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontFamily: "inherit",
-    resize: "vertical",
-  },
-  buttonGroup: {
-    display: "flex",
-    gap: "1rem",
-    marginTop: "1rem",
-  },
-  submitButton: {
-    flex: 1,
-    padding: "0.75rem 1.5rem",
-    backgroundColor: "#059669",
-    color: "#ffffff",
-    border: "none",
-    borderRadius: "0.375rem",
-    fontSize: "1rem",
-    fontWeight: "500",
-    cursor: "pointer",
-    transition: "background-color 0.2s",
-  },
-  cancelButton: {
-    flex: 1,
-    padding: "0.75rem 1.5rem",
-    backgroundColor: "#e5e7eb",
-    color: "#1f2937",
-    border: "none",
-    borderRadius: "0.375rem",
-    fontSize: "1rem",
-    fontWeight: "500",
-    cursor: "pointer",
-    transition: "background-color 0.2s",
-  },
-};
