@@ -3,6 +3,7 @@ import {
   createApplication,
   getApplications,
   getApplication,
+  updateApplication,
 } from "../controllers/applicationController.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 
@@ -16,5 +17,8 @@ router.get("/", verifyToken, getApplications);
 
 // GET /api/applications/:id - Get a single application by id (requires authentication)
 router.get("/:id", verifyToken, getApplication);
+
+// PUT /api/applications/:id - Update an application (requires authentication and ownership)
+router.put("/:id", verifyToken, updateApplication);
 
 export default router;

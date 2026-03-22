@@ -838,3 +838,397 @@ describe("Application Controller - GET /applications/:id", () => {
     });
   });
 });
+
+describe("Application Controller - PUT /applications/:id", () => {
+  let applicationId;
+  let originalApplication;
+
+  /**
+   * Setup: Create a test application to use in update tests
+   */
+  beforeAll(async () => {
+    const response = await request(app)
+      .post("/api/applications")
+      .set("Authorization", `Bearer ${authToken}`)
+      .send({
+        company: "OriginalCorp",
+        position: "Original Engineer",
+        status: "APPLIED",
+        appliedDate: "2026-03-22",
+        notes: "Original notes",
+      });
+
+    expect(response.status).toBe(201);
+    applicationId = response.body.application.id;
+    originalApplication = response.body.application;
+  });
+
+  describe("Authentication", () => {
+    it("should return 401 without Authorization header", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .send({
+          company: "UpdatedCorp",
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Authorization header missing",
+      );
+    });
+
+    it("should return 401 with invalid token", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", "Bearer invalid.jwt.token")
+        .send({
+          company: "UpdatedCorp",
+        });
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty("message", "Invalid token");
+    });
+  });
+
+  describe("Validation - ID format", () => {
+    it("should return 400 when id is not a valid positive number", async () => {
+      const response = await request(app)
+        .put("/api/applications/abc")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "UpdatedCorp",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Application ID must be a valid positive number",
+      );
+    });
+
+    it("should return 400 when id is zero", async () => {
+      const response = await request(app)
+        .put("/api/applications/0")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "UpdatedCorp",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Application ID must be a valid positive number",
+      );
+    });
+
+    it("should return 400 when id is negative", async () => {
+      const response = await request(app)
+        .put("/api/applications/-5")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "UpdatedCorp",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Application ID must be a valid positive number",
+      );
+    });
+  });
+
+  describe("Not found scenarios", () => {
+    it("should return 404 when application does not exist", async () => {
+      const response = await request(app)
+        .put("/api/applications/999999")
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "UpdatedCorp",
+        });
+
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty("message", "Application not found");
+    });
+
+    it("should return 404 when application exists but belongs to another user", async () => {
+      // Create another user
+      const otherUser = {
+        name: "Other Update User",
+        email: `otherupdate-${Date.now()}@test.com`,
+        password: "password123",
+      };
+
+      const registerRes = await request(app)
+        .post("/api/auth/register")
+        .send(otherUser);
+
+      expect(registerRes.status).toBe(201);
+      const otherUserId = registerRes.body.user.id;
+
+      const loginRes = await request(app).post("/api/auth/login").send({
+        email: otherUser.email,
+        password: otherUser.password,
+      });
+
+      const otherToken = loginRes.body.token;
+
+      // Create an application for the other user
+      const appRes = await request(app)
+        .post("/api/applications")
+        .set("Authorization", `Bearer ${otherToken}`)
+        .send({
+          company: "SecretCorp",
+          position: "Secret Role",
+          appliedDate: "2026-03-22",
+        });
+
+      expect(appRes.status).toBe(201);
+      const otherAppId = appRes.body.application.id;
+
+      // Try to update the other user's application with our token
+      const response = await request(app)
+        .put(`/api/applications/${otherAppId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "HackedCorp",
+        });
+
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty("message", "Application not found");
+
+      // Cleanup
+      await prisma.application.deleteMany({
+        where: { userId: otherUserId },
+      });
+      await prisma.user.delete({
+        where: { id: otherUserId },
+      });
+    });
+  });
+
+  describe("Validation - Field values", () => {
+    it("should return 400 when company is empty string", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "   ",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("message", "Company is required");
+    });
+
+    it("should return 400 when position is empty string", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          position: "   ",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("message", "Position is required");
+    });
+
+    it("should return 400 when appliedDate is empty string", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          appliedDate: "   ",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Applied date is required",
+      );
+    });
+
+    it("should return 400 when status is invalid", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          status: "INVALID_STATUS",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain("Invalid status");
+      expect(response.body.message).toContain("APPLIED");
+      expect(response.body.message).toContain("INTERVIEW");
+      expect(response.body.message).toContain("OFFER");
+      expect(response.body.message).toContain("REJECTED");
+    });
+
+    it("should return 400 when appliedDate is invalid format", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          appliedDate: "not-a-date",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Invalid date format. Use YYYY-MM-DD",
+      );
+    });
+  });
+
+  describe("Successful updates", () => {
+    it("should update all fields and return 200 with updated application", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "UpdatedCorp",
+          position: "Senior Engineer",
+          status: "INTERVIEW",
+          appliedDate: "2026-03-20",
+          notes: "Updated notes",
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Application updated successfully",
+      );
+      expect(response.body).toHaveProperty("application");
+      expect(response.body.application.id).toBe(applicationId);
+      expect(response.body.application.company).toBe("UpdatedCorp");
+      expect(response.body.application.position).toBe("Senior Engineer");
+      expect(response.body.application.status).toBe("INTERVIEW");
+      expect(response.body.application.notes).toBe("Updated notes");
+      expect(response.body.application).toHaveProperty("updatedAt");
+    });
+
+    it("should support partial update - only company", async () => {
+      const getRes = await request(app)
+        .get(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`);
+
+      const beforePosition = getRes.body.application.position;
+
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "PartialUpdateCorp",
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.application.company).toBe("PartialUpdateCorp");
+      // Other fields should remain unchanged
+      expect(response.body.application.position).toBe(beforePosition);
+    });
+
+    it("should support partial update - only status", async () => {
+      const getRes = await request(app)
+        .get(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`);
+
+      const beforeCompany = getRes.body.application.company;
+
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          status: "OFFER",
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.application.status).toBe("OFFER");
+      // Other fields should remain unchanged
+      expect(response.body.application.company).toBe(beforeCompany);
+    });
+
+    it("should support partial update - only appliedDate", async () => {
+      const getRes = await request(app)
+        .get(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`);
+
+      const beforeCompany = getRes.body.application.company;
+
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          appliedDate: "2026-03-15",
+        });
+
+      expect(response.status).toBe(200);
+      // Date should be updated
+      expect(response.body.application.appliedDate).toBe(
+        "2026-03-15T00:00:00.000Z",
+      );
+      // Other fields should remain unchanged
+      expect(response.body.application.company).toBe(beforeCompany);
+    });
+
+    it("should support partial update - only notes", async () => {
+      const getRes = await request(app)
+        .get(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`);
+
+      const beforeCompany = getRes.body.application.company;
+
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          notes: "New notes only",
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.application.notes).toBe("New notes only");
+      // Other fields should remain unchanged
+      expect(response.body.application.company).toBe(beforeCompany);
+    });
+
+    it("should allow updating notes to null", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          notes: null,
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.application.notes).toBeNull();
+    });
+
+    it("should accept all valid status values", async () => {
+      const statuses = ["APPLIED", "INTERVIEW", "OFFER", "REJECTED"];
+
+      for (const status of statuses) {
+        const response = await request(app)
+          .put(`/api/applications/${applicationId}`)
+          .set("Authorization", `Bearer ${authToken}`)
+          .send({
+            status,
+          });
+
+        expect(response.status).toBe(200);
+        expect(response.body.application.status).toBe(status);
+      }
+    });
+
+    it("should trim whitespace from company and position", async () => {
+      const response = await request(app)
+        .put(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+          company: "  Trimmed Company  ",
+          position: "  Trimmed Position  ",
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.application.company).toBe("Trimmed Company");
+      expect(response.body.application.position).toBe("Trimmed Position");
+    });
+  });
+});
