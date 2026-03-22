@@ -9,7 +9,8 @@ const VALID_STATUSES = ["APPLIED", "INTERVIEW", "OFFER", "REJECTED"];
  */
 export async function createApplication(req, res, next) {
   try {
-    const { company, position, status, appliedDate, notes } = req.body;
+    const { company, position, status, appliedDate, notes, resumeLink } =
+      req.body;
     const userId = req.user.userId;
 
     // Validate required fields
@@ -46,6 +47,16 @@ export async function createApplication(req, res, next) {
     const cleanPosition = position.trim();
     const cleanNotes = notes ? notes.trim() : null;
 
+    let cleanResumeLink = null;
+    if (resumeLink !== undefined && resumeLink !== null) {
+      if (typeof resumeLink !== "string") {
+        return res
+          .status(400)
+          .json({ message: "resumeLink must be a string if provided" });
+      }
+      const trimmedResumeLink = resumeLink.trim();
+      cleanResumeLink = trimmedResumeLink === "" ? null : trimmedResumeLink;
+    }
     // Create application with Prisma
     const application = await prisma.application.create({
       data: {
@@ -54,6 +65,7 @@ export async function createApplication(req, res, next) {
         status: finalStatus,
         appliedDate: dateObj,
         notes: cleanNotes,
+        resumeLink: cleanResumeLink,
         userId,
       },
       select: {
@@ -63,6 +75,7 @@ export async function createApplication(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
       },
     });
@@ -122,6 +135,7 @@ export async function getApplications(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -167,6 +181,7 @@ export async function getApplication(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -197,7 +212,8 @@ export async function updateApplication(req, res, next) {
   try {
     const { id } = req.params;
     const userId = req.user.userId;
-    const { company, position, status, appliedDate, notes } = req.body;
+    const { company, position, status, appliedDate, notes, resumeLink } =
+      req.body;
 
     // Validate and parse id
     const parsedId = Number(id);
@@ -268,7 +284,31 @@ export async function updateApplication(req, res, next) {
 
     // Add notes if provided (can be null or string, trim if string)
     if (notes !== undefined) {
-      updateData.notes = notes ? notes.trim() : null;
+      if (typeof notes === "string") {
+        const trimmedNotes = notes.trim();
+        updateData.notes = trimmedNotes === "" ? null : trimmedNotes;
+      } else if (notes === null) {
+        updateData.notes = null;
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Invalid notes format. Must be a string or null." });
+      }
+    }
+
+    // Add resumeLink if provided (can be null or string, trim if string)
+    if (resumeLink !== undefined) {
+      if (typeof resumeLink === "string") {
+        const trimmedResumeLink = resumeLink.trim();
+        updateData.resumeLink =
+          trimmedResumeLink === "" ? null : trimmedResumeLink;
+      } else if (resumeLink === null) {
+        updateData.resumeLink = null;
+      } else {
+        return res.status(400).json({
+          message: "Invalid resumeLink format. Must be a string or null.",
+        });
+      }
     }
 
     // If no fields to update, return current application
@@ -292,6 +332,7 @@ export async function updateApplication(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
         updatedAt: true,
       },

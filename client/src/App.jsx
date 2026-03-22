@@ -10,6 +10,7 @@ import { LoginPage } from "./pages/LoginPage.jsx";
 import { RegisterPage } from "./pages/RegisterPage.jsx";
 import { DashboardPage } from "./pages/DashboardPage.jsx";
 import { ApplicationFormPage } from "./pages/ApplicationFormPage.jsx";
+import { EditApplicationPage } from "./pages/EditApplicationPage.jsx";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ApplicationFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/applications/:id/edit"
+            element={
+              <ProtectedRoute>
+                <EditApplicationPage />
               </ProtectedRoute>
             }
           />

@@ -1,21 +1,58 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { createApplication } from "../services/applicationService.js";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  getApplication,
+  updateApplication,
+} from "../services/applicationService.js";
 
-export function ApplicationFormPage() {
+export function EditApplicationPage() {
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const [formData, setFormData] = useState({
     company: "",
     position: "",
     status: "APPLIED",
-    appliedDate: new Date().toISOString().split("T")[0],
+    appliedDate: "",
     notes: "",
     resumeLink: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+
+  // Fetch application data on mount
+  useEffect(() => {
+    fetchApplication();
+  }, [id]);
+
+  const fetchApplication = async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const data = await getApplication(id);
+      const app = data.application;
+
+      // Format date for input field (YYYY-MM-DD)
+      const dateObj = new Date(app.appliedDate);
+      const formattedDate = dateObj.toISOString().split("T")[0];
+
+      setFormData({
+        company: app.company,
+        position: app.position,
+        status: app.status,
+        appliedDate: formattedDate,
+        notes: app.notes || "",
+        resumeLink: app.resumeLink || "",
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to load application.");
+      console.error("Error fetching application:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,9 +80,9 @@ export function ApplicationFormPage() {
       return;
     }
 
-    setIsLoading(true);
+    setIsSubmitting(true);
     try {
-      await createApplication({
+      await updateApplication(id, {
         company: formData.company.trim(),
         position: formData.position.trim(),
         status: formData.status,
@@ -57,16 +94,31 @@ export function ApplicationFormPage() {
       // Success - redirect to dashboard
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to create application.");
-      console.error("Error creating application:", err);
+      setError(err.response?.data?.message || "Failed to update application.");
+      console.error("Error updating application:", err);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleCancel = () => {
     navigate("/dashboard");
   };
+
+  if (isLoading) {
+    return (
+      <div style={styles.container}>
+        <header style={styles.header}>
+          <h1 style={styles.title}>Job Tracker</h1>
+        </header>
+        <main style={styles.main}>
+          <div style={styles.formCard}>
+            <p>Loading application...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
@@ -78,7 +130,7 @@ export function ApplicationFormPage() {
       {/* Main Content */}
       <main style={styles.main}>
         <div style={styles.formCard}>
-          <h2 style={styles.formTitle}>Add New Application</h2>
+          <h2 style={styles.formTitle}>Edit Application</h2>
 
           {error && (
             <div style={styles.errorBanner}>
@@ -106,7 +158,7 @@ export function ApplicationFormPage() {
                 value={formData.company}
                 onChange={handleChange}
                 style={styles.input}
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -123,7 +175,7 @@ export function ApplicationFormPage() {
                 value={formData.position}
                 onChange={handleChange}
                 style={styles.input}
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -139,7 +191,7 @@ export function ApplicationFormPage() {
                 value={formData.appliedDate}
                 onChange={handleChange}
                 style={styles.input}
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -154,7 +206,7 @@ export function ApplicationFormPage() {
                 value={formData.status}
                 onChange={handleChange}
                 style={styles.select}
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
                 <option value="APPLIED">Applied</option>
                 <option value="INTERVIEW">Interview</option>
@@ -175,7 +227,7 @@ export function ApplicationFormPage() {
                 value={formData.notes}
                 onChange={handleChange}
                 style={styles.textarea}
-                disabled={isLoading}
+                disabled={isSubmitting}
                 rows="4"
               />
             </div>
@@ -193,7 +245,7 @@ export function ApplicationFormPage() {
                 value={formData.resumeLink}
                 onChange={handleChange}
                 style={styles.input}
-                disabled={isLoading}
+                disabled={isSubmitting}
               />
             </div>
 
@@ -202,15 +254,15 @@ export function ApplicationFormPage() {
               <button
                 type="submit"
                 style={styles.submitButton}
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
-                {isLoading ? "Creating..." : "Create Application"}
+                {isSubmitting ? "Saving..." : "Save Changes"}
               </button>
               <button
                 type="button"
                 onClick={handleCancel}
                 style={styles.cancelButton}
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
                 Cancel
               </button>
