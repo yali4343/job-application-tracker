@@ -1,28 +1,61 @@
 /* ============================================================================
-   Application List Component Styles
+   Component Styles - Career Momentum Design
+   ============================================================================
+   Enhanced application cards, badges, filters with dynamic interactions
+   and elevated visual hierarchy
+   ============================================================================ */
+
+/* ============================================================================
+   Application List Container
    ============================================================================ */
 
 .application-list {
   display: grid;
   gap: var(--space-6);
+  animation: fadeInUp 0.6s var(--ease-out);
 }
 
+/* ============================================================================
+   Application Card - Primary content container
+   ============================================================================ */
+
 .application-card {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: box-shadow var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-slow) var(--ease-out);
+  position: relative;
+}
+
+.application-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-slow) var(--ease-out);
+  z-index: 1;
 }
 
 .application-card:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-accent);
+  transform: translateY(-4px);
+}
+
+.application-card:hover::before {
+  transform: scaleX(1);
 }
 
 .application-card-header {
-  background: var(--color-bg-secondary);
-  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  padding: var(--space-6);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -35,51 +68,72 @@
 }
 
 .application-company {
-  font-size: var(--text-lg);
+  font-size: var(--text-xl);
   font-weight: var(--weight-bold);
   color: var(--color-text-primary);
   margin: 0 0 var(--space-1) 0;
+  letter-spacing: -0.01em;
 }
 
 .application-position {
   font-size: var(--text-base);
   color: var(--color-text-secondary);
   margin: 0;
+  font-weight: var(--weight-medium);
 }
+
+/* ============================================================================
+   Status Badge - Dynamic, color-coded status indicators
+   ============================================================================ */
 
 .application-status-badge {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
   font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-bold);
   white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: var(--shadow-xs);
+  animation: scaleIn 0.4s var(--ease-out);
 }
 
 .application-status-badge.applied {
   background: var(--color-info-light);
   color: var(--color-info);
+  border: 1px solid var(--color-info);
 }
 
 .application-status-badge.interview {
-  background: var(--color-info-light);
-  color: var(--color-info);
+  background: linear-gradient(135deg, var(--color-growth-light) 0%, var(--color-info-light) 100%);
+  color: var(--color-growth);
+  border: 1px solid var(--color-growth);
 }
 
 .application-status-badge.offer {
-  background: var(--color-success-light);
+  background: linear-gradient(135deg, var(--color-growth-light) 0%, var(--color-success-light) 100%);
   color: var(--color-success);
+  border: 1px solid var(--color-success);
+  box-shadow: var(--shadow-sm);
 }
 
 .application-status-badge.rejected {
   background: var(--color-error-light);
   color: var(--color-error);
+  border: 1px solid var(--color-error);
+  opacity: 0.8;
 }
 
+/* ============================================================================
+   Card Body - Detail section with elegant typography
+   ============================================================================ */
+
 .application-card-body {
-  padding: var(--space-4);
+  padding: var(--space-6);
   border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
 }
 
 .application-detail {
@@ -87,66 +141,107 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-4);
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px dashed var(--color-border-subtle);
 }
 
 .application-detail:last-child {
   margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .application-detail-label {
   font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
-  color: var(--color-text-primary);
-  min-width: 80px;
+  font-weight: var(--weight-bold);
+  color: var(--color-accent);
+  min-width: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .application-detail-value {
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--color-text-secondary);
   flex: 1;
+  font-weight: var(--weight-medium);
 }
 
 .application-notes {
   font-style: italic;
   word-break: break-word;
+  padding: var(--space-3);
+  background: var(--color-bg-secondary);
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--color-text-secondary);
 }
 
+/* ============================================================================
+   Card Footer - Action buttons section
+   ============================================================================ */
+
 .application-card-footer {
-  background: var(--color-bg-secondary);
-  padding: var(--space-4);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  padding: var(--space-5);
   display: flex;
   gap: var(--space-3);
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .application-card-footer .button {
   flex: 0 1 auto;
-  min-width: 100px;
+  min-width: 110px;
+  font-weight: var(--weight-bold);
 }
 
+/* ============================================================================
+   Empty & Loading States - Informative messaging
+   ============================================================================ */
+
 .application-loading {
-  padding: var(--space-6);
+  padding: var(--space-8);
   text-align: center;
-  background: var(--color-bg-primary);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  border-radius: var(--radius-lg);
+  border: 2px dashed var(--color-border);
   color: var(--color-text-tertiary);
+  animation: pulse 2s ease-in-out infinite;
 }
 
 .application-empty-state {
-  padding: var(--space-8) var(--space-6);
-  background: var(--color-bg-secondary);
-  border-radius: var(--radius-md);
-  border: 2px dashed var(--color-border);
+  padding: var(--space-10) var(--space-8);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-accent) 100%);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border);
   text-align: center;
+  animation: fadeInUp 0.6s var(--ease-out);
+  position: relative;
+}
+
+.application-empty-state::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-diagonal);
 }
 
 .application-empty-state-title {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
   color: var(--color-text-primary);
   margin: 0 0 var(--space-2) 0;
+}
+
+.application-empty-state-description {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 var(--space-4) 0;
 }
 
 .application-empty-state-description {
@@ -156,19 +251,21 @@
 }
 
 /* ============================================================================
-   Filter Bar Component Styles
+   Filter Bar Component - Dynamic filtering interface
    ============================================================================ */
 
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--space-5);
   align-items: flex-end;
   margin-bottom: var(--space-6);
-  padding: var(--space-4);
-  background: var(--color-bg-secondary);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  padding: var(--space-6);
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-accent) 100%);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  animation: fadeInUp 0.5s var(--ease-out);
 }
 
 .filter-group {
@@ -176,13 +273,15 @@
   min-width: 250px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .filter-group label {
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
   color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .filter-group .input,
@@ -191,16 +290,21 @@
 }
 
 .filter-group select {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   font-size: var(--text-base);
-  font-family: var(--font-sans);
-  border: 1px solid var(--color-border);
+  font-family: var(--font-body);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-base) var(--ease-out);
   box-sizing: border-box;
   cursor: pointer;
+  font-weight: var(--weight-medium);
+}
+
+.filter-group select:hover {
+  border-color: var(--color-accent);
 }
 
 .filter-group select:focus {
@@ -212,27 +316,40 @@
 .filter-actions {
   display: flex;
   gap: var(--space-3);
+  animation: slideInUp 0.4s var(--ease-out);
 }
 
 /* ============================================================================
-   Dashboard Page Styles
+   Dashboard Container Styles
    ============================================================================ */
 
 .dashboard-container {
   min-height: 100vh;
-  background: var(--color-bg-tertiary);
+  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
   display: flex;
   flex-direction: column;
 }
 
 .dashboard-header {
-  background: var(--color-bg-primary);
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--space-6);
+  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  border-bottom: 2px solid var(--color-border);
+  padding: var(--space-8);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-sm);
+  animation: slideInDown 0.4s var(--ease-out);
+}
+
+.dashboard-header h1 {
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-black);
+  margin: 0;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 }
 
 .dashboard-header-content {

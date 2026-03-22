@@ -1,93 +1,126 @@
 /* ============================================================================
-   DESIGN SYSTEM: Enterprise SaaS UI - Precision & Clarity
+   DESIGN SYSTEM: "Career Momentum" - Dynamic Design for Job Trackers
    ============================================================================
-   This design system enforces the principles from frontend-design.md:
-   - 4px base grid for all spacing
-   - Consistent color hierarchy
-   - Symmetrical padding (TLBR must match)
-   - Clear typography scale
-   - Single consistent depth strategy (subtle single shadow)
-   - Reusable component classes
+   AESTHETIC DIRECTION: Forward-moving energy with distinctive personality
+   - Bold, saturated accent colors (vibrant purple + emerald growth)
+   - Distinctive typography (Outfit display + Fira Code accents)
+   - Dynamic animations with staggered reveals
+   - Asymmetrical layouts with diagonal elements
+   - Geometric patterns and atmospheric visual depth
    ============================================================================ */
 
 /* ============================================================================
-   COLOR TOKENS - Cool professional foundation for job tracking application
+   FONT IMPORTS - Distinctive, characterful fonts
+   ============================================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap");
+
+/* ============================================================================
+   COLOR TOKENS - Vibrant, energetic palette with momentum
    ============================================================================ */
 
 :root {
-  /* Foundation: Cool, professional, trustworthy palette */
-  /* Perfect for a job application tracker - feels capable and serious */
-
-  /* Primary neutrals - cool slate base */
+  /* VIBRANT DYNAMIC PALETTE */
+  /* Background: Clean, minimal whites with subtle warmth */
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8fafc;
-  --color-bg-tertiary: #f1f5f9;
+  --color-bg-secondary: #f9f7ff; /* Subtle purple tint */
+  --color-bg-tertiary: #f3f0ff; /* Warmer purple undertone */
+  --color-bg-accent: #ede9fe; /* Purple wash for highlights */
 
-  --color-text-primary: #0f172a; /* Near-black, very high contrast */
-  --color-text-secondary: #475569; /* Medium gray for secondary text */
-  --color-text-tertiary: #64748b; /* Lighter gray for muted text */
-  --color-text-disabled: #cbd5e1; /* Disabled states */
+  /* Text: High contrast with personality */
+  --color-text-primary: #0a0212; /* Deep, nearly black */
+  --color-text-secondary: #3e3a50; /* Sophisticated gray */
+  --color-text-tertiary: #6b677a; /* Softer gray */
+  --color-text-disabled: #b3afc5; /* Muted */
 
-  /* Accent color: Professional purple for CTAs and highlights */
-  --color-accent: #a855f7;
-  --color-accent-hover: #9333ea;
-  --color-accent-light: #f3e8ff;
+  /* PRIMARY ACCENT: Bold, vibrant purple - symbol of ambition */
+  --color-accent: #8b5cf6; /* Vibrant purple */
+  --color-accent-hover: #7c3aed; /* Deeper on hover */
+  --color-accent-light: #ede9fe; /* Light wash */
+  --color-accent-strong: #6d28d9; /* Ultra dark for contrast */
 
-  /* Semantic colors */
+  /* GROWTH INDICATOR: Emerald - momentum & progress */
+  --color-growth: #10b981;
+  --color-growth-light: #d1fae5;
+  --color-growth-hover: #059669;
+
+  /* Semantic colors - elevated */
   --color-success: #10b981;
-  --color-success-light: #ecfdf5;
+  --color-success-light: #d1fae5;
   --color-warning: #f59e0b;
-  --color-warning-light: #fffbeb;
-  --color-error: #ef4444;
-  --color-error-light: #fef2f2;
-  --color-info: #3b82f6;
-  --color-info-light: #eff6ff;
+  --color-warning-light: #fef3c7;
+  --color-error: #d31f3f; /* Bolder red */
+  --color-error-light: #fee7e8;
+  --color-info: #0ea5e9;
+  --color-info-light: #cffafe;
 
-  /* Borders */
-  --color-border: #e2e8f0;
-  --color-border-subtle: #f1f5f9;
+  /* Borders: More refined */
+  --color-border: #e5dbf7;
+  --color-border-subtle: #f3eff9;
 
-  /* Shadows - subtle single-layer approach (not layered) */
-  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
-  --shadow-md: 0 2px 4px rgba(15, 23, 42, 0.06);
-  --shadow-lg: 0 4px 6px rgba(15, 23, 42, 0.07);
+  /* Shadows: Elevated depth with purpose */
+  --shadow-xs: 0 1px 2px rgba(139, 92, 246, 0.05);
+  --shadow-sm:
+    0 2px 4px rgba(139, 92, 246, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 8px rgba(139, 92, 246, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg:
+    0 8px 16px rgba(139, 92, 246, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 12px 24px rgba(139, 92, 246, 0.15);
 
-  /* Dark mode */
+  /* Gradient overlays for dynamic effects */
+  --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --gradient-growth: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --gradient-diagonal: linear-gradient(45deg, #8b5cf6 0%, #0ea5e9 100%);
+
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg-primary: #0f172a;
-    --color-bg-secondary: #1e293b;
-    --color-bg-tertiary: #334155;
+    --color-bg-primary: #0a0212;
+    --color-bg-secondary: #1a1528;
+    --color-bg-tertiary: #2a2340;
+    --color-bg-accent: #3a3250;
 
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #cbd5e1;
-    --color-text-tertiary: #94a3b8;
-    --color-text-disabled: #475569;
+    --color-text-primary: #f5f2ff;
+    --color-text-secondary: #d4cfe0;
+    --color-text-tertiary: #a39fb5;
+    --color-text-disabled: #6b677a;
 
-    --color-accent: #d946ef;
-    --color-accent-hover: #c026d3;
-    --color-accent-light: #3f0f5c;
+    /* Brighter accent in dark mode */
+    --color-accent: #a78bfa;
+    --color-accent-hover: #c4b5fd;
+    --color-accent-light: #2a2340;
+    --color-accent-strong: #f3e8ff;
 
-    --color-success: #10b981;
-    --color-success-light: #064e3b;
-    --color-warning: #f59e0b;
-    --color-warning-light: #78350f;
+    --color-growth: #6ee7b7;
+    --color-growth-light: #0d4a3c;
+    --color-growth-hover: #a7f3d0;
+
+    --color-success: #6ee7b7;
+    --color-success-light: #0d4a3c;
+    --color-warning: #fbbf24;
+    --color-warning-light: #451e0f;
     --color-error: #f87171;
     --color-error-light: #7f1d1d;
-    --color-info: #60a5fa;
-    --color-info-light: #1e3a8a;
+    --color-info: #38bdf8;
+    --color-info-light: #0c2d48;
 
-    --color-border: #334155;
-    --color-border-subtle: #1e293b;
+    --color-border: #3a3250;
+    --color-border-subtle: #2a2340;
 
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.15);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.25);
+    --shadow-xs: 0 1px 2px rgba(139, 92, 246, 0.15);
+    --shadow-sm:
+      0 2px 4px rgba(139, 92, 246, 0.2), 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md:
+      0 4px 8px rgba(139, 92, 246, 0.25), 0 2px 4px rgba(0, 0, 0, 0.4);
+    --shadow-lg:
+      0 8px 16px rgba(139, 92, 246, 0.3), 0 4px 8px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 12px 24px rgba(139, 92, 246, 0.35);
+
+    --gradient-accent: linear-gradient(135deg, #a78bfa 0%, #c4b5fd 100%);
+    --gradient-growth: linear-gradient(135deg, #6ee7b7 0%, #a7f3d0 100%);
+    --gradient-diagonal: linear-gradient(45deg, #a78bfa 0%, #38bdf8 100%);
   }
 }
 
@@ -115,42 +148,47 @@
 }
 
 /* ============================================================================
-   TYPOGRAPHY SCALE - Consistent sizing and weight system
+   TYPOGRAPHY SCALE - DISTINCTIVE FONTS FOR PERSONALITY
    ============================================================================ */
 
 :root {
-  /* Font families */
-  --font-sans:
-    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  --font-mono:
-    ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  /* Font families: Outfit (distinctive display) + Fira Code (technical accent) */
+  --font-display:
+    "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body:
+    "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Fira Code", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  /* Base text styles - 14px base, computed from standard 18px on desktop */
-  --text-xs: 12px;
+  /* Base text styles - optimized for Outfit's distinctive character */
+  --text-xs: 11px;
   --text-sm: 13px;
   --text-base: 14px;
   --text-lg: 16px;
   --text-xl: 18px;
   --text-2xl: 20px;
-  --text-3xl: 24px;
-  --text-4xl: 32px;
+  --text-3xl: 28px;
+  --text-4xl: 36px;
+  --text-5xl: 48px;
 
-  /* Line heights */
-  --leading-tight: 1.25;
-  --leading-snug: 1.375;
+  /* Line heights - adjusted for Outfit's generous letterforms */
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
+  --leading-relaxed: 1.675;
+  --leading-loose: 1.8;
 
-  /* Font weights */
+  /* Font weights - Outfit available up to 800 */
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
+  --weight-black: 800;
 
-  /* Letter spacing */
-  --tracking-tight: -0.02em;
+  /* Letter spacing - intentional, personality-driven */
+  --tracking-tight: -0.01em;
   --tracking-normal: 0;
-  --tracking-wide: 0.02em;
+  --tracking-wide: 0.01em;
+  --tracking-wider: 0.02em;
 }
 
 /* ============================================================================
@@ -166,18 +204,145 @@
 }
 
 /* ============================================================================
-   TRANSITIONS & ANIMATIONS
+   TRANSITIONS & ANIMATIONS - Dynamic, purposeful motion
    ============================================================================ */
 
 :root {
   /* Fast for micro-interactions, medium for larger transitions */
   --duration-fast: 150ms;
   --duration-base: 200ms;
-  --duration-slow: 250ms;
+  --duration-slow: 300ms;
+  --duration-slowest: 400ms;
 
-  /* Easing: cubic-bezier(0.25, 1, 0.5, 1) for sophistication */
+  /* Easing: sophisticated curves for momentum-driven feel */
   --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-smooth: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ============================================================================
+   KEYFRAME ANIMATIONS - Staggered reveals & dynamic effects
+   ============================================================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+}
+
+/* ============================================================================
+   GLOBAL BODY STYLES - Foundation for career momentum aesthetic
+   ============================================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+  background: var(--color-bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Subtle diagonal background pattern for visual interest */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    rgba(139, 92, 246, 0.01) 2px,
+    rgba(139, 92, 246, 0.01) 4px
+  );
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* ============================================================================

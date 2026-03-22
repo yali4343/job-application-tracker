@@ -1,5 +1,8 @@
 /* ============================================================================
-   Navbar Component Styles
+   Navbar Component - Career Momentum Aesthetic
+   ============================================================================
+   Dynamic header with forward-moving energy, bold typography, 
+   and elevated visual treatment
    ============================================================================ */
 
 .navbar {
@@ -7,13 +10,30 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
-  background: var(--color-bg-primary);
-  border-bottom: 0.5px solid var(--color-border);
+  height: 70px;
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-primary) 0%,
+    var(--color-bg-secondary) 100%
+  );
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border);
   z-index: 1000;
   display: flex;
   align-items: center;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-md);
+  animation: slideInDown 0.4s var(--ease-out);
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .navbar-content {
@@ -21,90 +41,134 @@
   height: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-6);
 }
 
-/* Left section - Brand */
+/* Left section - Brand with bold, distinctive styling */
 .navbar-left {
   display: flex;
   align-items: center;
+  min-width: fit-content;
 }
 
 .navbar-brand {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   text-decoration: none;
   color: var(--color-text-primary);
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-base) var(--ease-out);
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
+.navbar-brand::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+  opacity: 0;
+  border-radius: var(--radius-md);
+  transition: opacity var(--duration-base) var(--ease-out);
+  z-index: -1;
 }
 
 .navbar-brand:hover {
   color: var(--color-accent);
 }
 
+.navbar-brand:hover::before {
+  opacity: 0.1;
+}
+
 .navbar-brand-icon {
-  font-size: 20px;
+  font-size: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .navbar-brand-text {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.02em;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.5px;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Center section - Navigation links */
+/* Center section - Navigation links with underline animation */
 .navbar-center {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-6);
   flex: 1;
   justify-content: center;
 }
 
 .navbar-link {
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
   color: var(--color-text-secondary);
   text-decoration: none;
   padding: var(--space-3) var(--space-3);
   border-radius: var(--radius-sm);
   position: relative;
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-base) var(--ease-out);
+}
+
+.navbar-link::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--color-accent);
+  transform: translateX(-50%);
+  transition: width var(--duration-base) var(--ease-out);
 }
 
 .navbar-link:hover {
   color: var(--color-text-primary);
 }
 
-.navbar-link.active {
-  color: var(--color-accent);
-  border-left: 2px solid var(--color-accent);
-  padding-left: calc(var(--space-3) - 2px);
+.navbar-link:hover::after {
+  width: calc(100% - 6px);
 }
 
-/* Right section - Auth buttons */
+.navbar-link.active {
+  color: var(--color-accent);
+}
+
+.navbar-link.active::after {
+  width: calc(100% - 6px);
+}
+
+/* Right section - Auth buttons with enhanced states */
 .navbar-right {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  min-width: fit-content;
 }
 
 .navbar-button {
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
   padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-sm);
-  border: 0.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
   background: transparent;
   color: var(--color-text-primary);
   cursor: pointer;
@@ -112,42 +176,82 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-base) var(--ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-secondary);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+  z-index: -1;
 }
 
 .navbar-button:hover {
-  border-color: var(--color-text-primary);
-  background: var(--color-bg-secondary);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
+.navbar-button:hover::before {
+  opacity: 1;
+}
+
+/* Register button - prominent with gradient */
 .navbar-button.register {
-  background: var(--color-accent);
+  background: var(--gradient-accent);
   border-color: var(--color-accent);
   color: white;
 }
 
 .navbar-button.register:hover {
-  background: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
 }
 
+/* Logout button - error state styling */
 .navbar-button.logout {
-  background: transparent;
-  color: var(--color-error);
   border-color: var(--color-error);
+  color: var(--color-error);
 }
 
 .navbar-button.logout:hover {
   background: var(--color-error-light);
   border-color: var(--color-error);
+  color: var(--color-error);
 }
 
 /* Responsive behavior */
 @media (max-width: 768px) {
+  .navbar {
+    height: 64px;
+  }
+
   .navbar-content {
-    padding: 0 var(--space-3);
+    padding: 0 var(--space-4);
     gap: var(--space-3);
   }
+
+  .navbar-center {
+    display: none;
+  }
+
+  .navbar-brand-text {
+    display: none;
+  }
+
+  .navbar-right {
+    gap: var(--space-2);
+  }
+
+  .navbar-button {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+  }
+}
 
   .navbar-center {
     display: none;

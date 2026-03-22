@@ -1,5 +1,8 @@
 /* ============================================================================
-   Footer Component Styles - Contact & Social Section
+   Footer Component - Career Momentum Aesthetic
+   ============================================================================
+   Refined footer with elevated styling, animated contact buttons,
+   and cohesive design with the overall application
    ============================================================================ */
 
 .footer {
@@ -7,11 +10,27 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: var(--color-bg-primary);
-  border-top: 0.5px solid var(--color-border);
-  padding: var(--space-3) 0;
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-primary) 100%
+  );
+  border-top: 2px solid var(--color-border);
+  padding: var(--space-4) 0;
   z-index: 999;
-  box-shadow: 0 -1px 3px rgba(15, 23, 42, 0.05);
+  box-shadow: var(--shadow-lg);
+  animation: slideInUp 0.4s var(--ease-out);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .footer-content {
@@ -19,39 +38,47 @@
   height: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-6);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: var(--space-6);
 }
 
-/* Left section - Contact text */
+/* Left section - Brand/text with distinctive styling */
 .footer-left {
   display: flex;
   align-items: center;
+  gap: var(--space-4);
+  min-width: fit-content;
 }
 
 .footer-text {
   font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
   color: var(--color-text-secondary);
   margin: 0;
   white-space: nowrap;
+  letter-spacing: 0.05em;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Right section - Contact icons */
-.footer-right {
+/* Button group on the left */
+.footer-buttons-group {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  min-width: fit-content;
 }
 
 .footer-contact-button {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
-  border: 0.5px solid var(--color-border);
+  border: 2px solid var(--color-border);
   background: transparent;
   color: var(--color-text-secondary);
   cursor: pointer;
@@ -59,15 +86,30 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: all var(--duration-base) var(--ease-out);
   position: relative;
+  overflow: hidden;
+}
+
+.footer-contact-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--color-bg-secondary);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out);
+  z-index: -1;
 }
 
 .footer-contact-button:hover {
-  background: var(--color-bg-secondary);
-  border-color: var(--color-border);
+  border-color: var(--color-accent);
   color: var(--color-accent);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.footer-contact-button:hover::before {
+  opacity: 1;
 }
 
 .footer-contact-button:focus {
@@ -85,17 +127,64 @@
   line-height: 1;
   width: 100%;
   height: 100%;
+  transition: transform var(--duration-base) var(--ease-out);
 }
 
-/* Specific button styling */
+.footer-contact-button:hover .footer-icon {
+  transform: scale(1.1);
+}
+
+/* Specific button styling - Email */
+.footer-contact-button.email {
+  border-color: var(--color-info);
+}
+
 .footer-contact-button.email:hover {
   border-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.footer-contact-button.email:hover::before {
   background: var(--color-info-light);
 }
 
+/* Specific button styling - GitHub */
+.footer-contact-button.github {
+  border-color: var(--color-text-secondary);
+}
+
 .footer-contact-button.github:hover {
-  border-color: var(--color-text-primary);
-  background: var(--color-bg-secondary);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .footer {
+    padding: var(--space-3) 0;
+  }
+
+  .footer-content {
+    padding: 0 var(--space-4);
+    gap: var(--space-3);
+  }
+
+  .footer-text {
+    font-size: var(--text-xs);
+  }
+
+  .footer-contact-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .footer-icon {
+    font-size: 16px;
+  }
+
+  .footer-right {
+    gap: var(--space-2);
+  }
 }
 
 .footer-contact-button.linkedin:hover {
