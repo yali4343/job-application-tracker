@@ -364,3 +364,310 @@ describe("Application Controller - POST /applications", () => {
     });
   });
 });
+
+describe("Application Controller - GET /applications", () => {
+  // Create test applications for filtering tests
+  beforeAll(async () => {
+    // Create diverse test applications
+    await prisma.application.createMany({
+      data: [
+        {
+          company: "Google",
+          position: "Backend Developer",
+          status: "APPLIED",
+          appliedDate: new Date("2026-03-01"),
+          notes: "Large tech company",
+          userId: testUserId,
+        },
+        {
+          company: "Microsoft",
+          position: "Frontend Engineer",
+          status: "INTERVIEW",
+          appliedDate: new Date("2026-03-05"),
+          notes: "Cloud-focused company",
+          userId: testUserId,
+        },
+        {
+          company: "Google Cloud",
+          position: "DevOps Engineer",
+          status: "OFFER",
+          appliedDate: new Date("2026-03-10"),
+          notes: "Infrastructure role",
+          userId: testUserId,
+        },
+        {
+          company: "Amazon",
+          position: "Full-stack Developer",
+          status: "REJECTED",
+          appliedDate: new Date("2026-02-15"),
+          notes: "AWS platform experience required",
+          userId: testUserId,
+        },
+      ],
+    });
+  });
+
+  describe("Authentication", () => {
+    it("should reject when no token is provided", async () => {
+      const response = await request(app).get("/api/applications");
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Authorization header missing",
+      );
+    });
+
+    it("should reject with invalid token", async () => {
+      const response = await request(app)
+        .get("/api/applications")
+        .set("Authorization", "Bearer invalid.jwt.token");
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty("message", "Invalid token");
+    });
+  });
+
+  describe("Basic retrieval", () => {
+    it("should return only the logged-in user's applications", async () => {
+      // Create a second test user with their own application
+      const otherUser = {
+        name: "Other User",
+        email: `otheruser-${Date.now()}@test.com`,
+        password: "password123",
+      };
+
+      const registerRes = await request(app)
+        .post("/api/auth/register")
+        .send(otherUser);
+
+      const otherUserId = registerRes.body.user.id;
+
+      // Create an application for the other user
+      await prisma.application.create({
+        data: {
+          company: "Stripe",
+          position: "Engineer",
+          status: "APPLIED",
+          appliedDate: new Date(),
+          userId: otherUserId,
+        },
+      });
+
+      // Get applications for the first test user
+      const response = await request(app)
+        .get("/api/applications")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications).toBeDefined();
+      expect(Array.isArray(response.body.applications)).toBe(true);
+
+      // Verify all applications belong to the authenticated user
+      response.body.applications.forEach((app) => {
+        // Verify by company name - the "Stripe" application should not be here
+        expect(app.company).not.toBe("Stripe");
+      });
+
+      // Verify we have at least the 4 test applications created in beforeAll
+      expect(response.body.count).toBeGreaterThanOrEqual(4);
+
+      // Cleanup: remove other user
+      await prisma.application.deleteMany({
+        where: { userId: otherUserId },
+      });
+      await prisma.user.delete({
+        where: { id: otherUserId },
+      });
+    });
+
+    it("should return applications sorted by createdAt descending", async () => {
+      const response = await request(app)
+        .get("/api/applications")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications.length).toBeGreaterThan(0);
+
+      // Check that applications are sorted by createdAt desc
+      for (let i = 1; i < response.body.applications.length; i++) {
+        const currentDate = new Date(response.body.applications[i].createdAt);
+        const prevDate = new Date(response.body.applications[i - 1].createdAt);
+
+        expect(currentDate.getTime()).toBeLessThanOrEqual(prevDate.getTime());
+      }
+    });
+
+    it("should return empty array when user has no applications", async () => {
+      // Create a third user with no applications
+      const emptyUser = {
+        name: "Empty User",
+        email: `emptyuser-${Date.now()}@test.com`,
+        password: "password123",
+      };
+
+      const registerRes = await request(app)
+        .post("/api/auth/register")
+        .send(emptyUser);
+
+      expect(registerRes.status).toBe(201);
+
+      const loginRes = await request(app).post("/api/auth/login").send({
+        email: emptyUser.email,
+        password: emptyUser.password,
+      });
+
+      const emptyToken = loginRes.body.token;
+
+      const response = await request(app)
+        .get("/api/applications")
+        .set("Authorization", `Bearer ${emptyToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications).toEqual([]);
+      expect(response.body.count).toBe(0);
+
+      // Cleanup
+      await prisma.user.delete({
+        where: { id: registerRes.body.user.id },
+      });
+    });
+  });
+
+  describe("Filtering - Status", () => {
+    it("should filter by status query parameter", async () => {
+      const response = await request(app)
+        .get("/api/applications?status=APPLIED")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications).toBeDefined();
+
+      // Verify all applications have APPLIED status
+      response.body.applications.forEach((app) => {
+        expect(app.status).toBe("APPLIED");
+      });
+
+      // Should have at least 1 application with APPLIED status (from beforeAll setup)
+      expect(response.body.count).toBeGreaterThanOrEqual(1);
+    });
+
+    it("should filter by other statuses", async () => {
+      const testStatuses = ["INTERVIEW", "OFFER", "REJECTED"];
+
+      for (const testStatus of testStatuses) {
+        const response = await request(app)
+          .get(`/api/applications?status=${testStatus}`)
+          .set("Authorization", `Bearer ${authToken}`);
+
+        expect(response.status).toBe(200);
+        response.body.applications.forEach((app) => {
+          expect(app.status).toBe(testStatus);
+        });
+      }
+    });
+
+    it("should return 400 for invalid status", async () => {
+      const response = await request(app)
+        .get("/api/applications?status=INVALID")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty("message");
+      expect(response.body.message).toContain("Invalid status");
+      expect(response.body.message).toContain("APPLIED");
+      expect(response.body.message).toContain("INTERVIEW");
+      expect(response.body.message).toContain("OFFER");
+      expect(response.body.message).toContain("REJECTED");
+    });
+  });
+
+  describe("Filtering - Search", () => {
+    it("should filter by search in company name (case-insensitive)", async () => {
+      const response = await request(app)
+        .get("/api/applications?search=google")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications.length).toBeGreaterThan(0);
+
+      // Should match both "Google" and "Google Cloud"
+      response.body.applications.forEach((app) => {
+        expect(app.company.toLowerCase().includes("google")).toBe(true);
+      });
+    });
+
+    it("should filter by search in position (case-insensitive)", async () => {
+      const response = await request(app)
+        .get("/api/applications?search=developer")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications.length).toBeGreaterThan(0);
+
+      // Should match positions containing "Developer"
+      response.body.applications.forEach((app) => {
+        const matchesPosition =
+          app.position.toLowerCase().includes("developer") ||
+          app.company.toLowerCase().includes("developer") ||
+          (app.notes && app.notes.toLowerCase().includes("developer"));
+
+        expect(matchesPosition).toBe(true);
+      });
+    });
+
+    it("should filter by search in notes (case-insensitive)", async () => {
+      const response = await request(app)
+        .get("/api/applications?search=aws")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications.length).toBeGreaterThan(0);
+
+      // Should match applications with "AWS" in notes
+      response.body.applications.forEach((app) => {
+        const matchesNotes =
+          (app.notes && app.notes.toLowerCase().includes("aws")) ||
+          app.company.toLowerCase().includes("aws") ||
+          app.position.toLowerCase().includes("aws");
+
+        expect(matchesNotes).toBe(true);
+      });
+    });
+  });
+
+  describe("Combining filters", () => {
+    it("should combine status and search filters correctly", async () => {
+      // Search for "google" with APPLIED status
+      const response = await request(app)
+        .get("/api/applications?status=APPLIED&search=google")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications).toBeDefined();
+
+      // All results should have APPLIED status
+      response.body.applications.forEach((app) => {
+        expect(app.status).toBe("APPLIED");
+        // And should match search in company, position, or notes
+        const matchesSearch =
+          app.company.toLowerCase().includes("google") ||
+          app.position.toLowerCase().includes("google") ||
+          (app.notes && app.notes.toLowerCase().includes("google"));
+
+        expect(matchesSearch).toBe(true);
+      });
+    });
+
+    it("should return empty array if filters match nothing", async () => {
+      // Search for "nonexistent" with OFFER status
+      const response = await request(app)
+        .get("/api/applications?status=OFFER&search=nonexistent")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.applications).toEqual([]);
+      expect(response.body.count).toBe(0);
+    });
+  });
+});

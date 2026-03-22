@@ -75,3 +75,63 @@ export async function createApplication(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * Get all applications of the authenticated user
+ * Supports optional filtering by status and search
+ */
+export async function getApplications(req, res, next) {
+  try {
+    const userId = req.user.userId;
+    const { status, search } = req.query;
+
+    // Validate status query param if provided
+    if (status && !VALID_STATUSES.includes(status)) {
+      return res.status(400).json({
+        message: `Invalid status. Must be one of: ${VALID_STATUSES.join(", ")}`,
+      });
+    }
+
+    // Build where clause
+    const where = {
+      userId,
+    };
+
+    // Add status filter if provided
+    if (status) {
+      where.status = status;
+    }
+
+    // Add search filter if provided (case-insensitive in company, position, notes)
+    if (search) {
+      where.OR = [
+        { company: { contains: search, mode: "insensitive" } },
+        { position: { contains: search, mode: "insensitive" } },
+        { notes: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    // Fetch applications ordered by createdAt descending
+    const applications = await prisma.application.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        company: true,
+        position: true,
+        status: true,
+        appliedDate: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return res.status(200).json({
+      applications,
+      count: applications.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
