@@ -9,7 +9,8 @@ const VALID_STATUSES = ["APPLIED", "INTERVIEW", "OFFER", "REJECTED"];
  */
 export async function createApplication(req, res, next) {
   try {
-    const { company, position, status, appliedDate, notes } = req.body;
+    const { company, position, status, appliedDate, notes, resumeLink } =
+      req.body;
     const userId = req.user.userId;
 
     // Validate required fields
@@ -45,6 +46,7 @@ export async function createApplication(req, res, next) {
     const cleanCompany = company.trim();
     const cleanPosition = position.trim();
     const cleanNotes = notes ? notes.trim() : null;
+    const cleanResumeLink = resumeLink ? resumeLink.trim() : null;
 
     // Create application with Prisma
     const application = await prisma.application.create({
@@ -54,6 +56,7 @@ export async function createApplication(req, res, next) {
         status: finalStatus,
         appliedDate: dateObj,
         notes: cleanNotes,
+        resumeLink: cleanResumeLink,
         userId,
       },
       select: {
@@ -63,6 +66,7 @@ export async function createApplication(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
       },
     });
@@ -122,6 +126,7 @@ export async function getApplications(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -167,6 +172,7 @@ export async function getApplication(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -197,7 +203,8 @@ export async function updateApplication(req, res, next) {
   try {
     const { id } = req.params;
     const userId = req.user.userId;
-    const { company, position, status, appliedDate, notes } = req.body;
+    const { company, position, status, appliedDate, notes, resumeLink } =
+      req.body;
 
     // Validate and parse id
     const parsedId = Number(id);
@@ -271,6 +278,11 @@ export async function updateApplication(req, res, next) {
       updateData.notes = notes ? notes.trim() : null;
     }
 
+    // Add resumeLink if provided (can be null or string, trim if string)
+    if (resumeLink !== undefined) {
+      updateData.resumeLink = resumeLink ? resumeLink.trim() : null;
+    }
+
     // If no fields to update, return current application
     if (Object.keys(updateData).length === 0) {
       return res.status(200).json({
@@ -292,6 +304,7 @@ export async function updateApplication(req, res, next) {
         status: true,
         appliedDate: true,
         notes: true,
+        resumeLink: true,
         createdAt: true,
         updatedAt: true,
       },

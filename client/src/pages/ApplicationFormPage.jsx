@@ -11,6 +11,7 @@ export function ApplicationFormPage() {
     status: "APPLIED",
     appliedDate: new Date().toISOString().split("T")[0],
     notes: "",
+    resumeLink: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -50,6 +51,7 @@ export function ApplicationFormPage() {
         status: formData.status,
         appliedDate: new Date(formData.appliedDate).toISOString(),
         notes: formData.notes.trim(),
+        resumeLink: formData.resumeLink.trim(),
       });
 
       // Success - redirect to dashboard
@@ -175,6 +177,23 @@ export function ApplicationFormPage() {
                 style={styles.textarea}
                 disabled={isLoading}
                 rows="4"
+              />
+            </div>
+
+            {/* Resume Link */}
+            <div style={styles.formGroup}>
+              <label htmlFor="resumeLink" style={styles.label}>
+                Resume Link
+              </label>
+              <input
+                type="url"
+                id="resumeLink"
+                name="resumeLink"
+                placeholder="e.g., https://docs.google.com/document/d/..."
+                value={formData.resumeLink}
+                onChange={handleChange}
+                style={styles.input}
+                disabled={isLoading}
               />
             </div>
 

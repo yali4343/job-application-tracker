@@ -15,6 +15,7 @@ export function EditApplicationPage() {
     status: "APPLIED",
     appliedDate: "",
     notes: "",
+    resumeLink: "",
   });
 
   const [isLoading, setIsLoading] = useState(true);
@@ -43,6 +44,7 @@ export function EditApplicationPage() {
         status: app.status,
         appliedDate: formattedDate,
         notes: app.notes || "",
+        resumeLink: app.resumeLink || "",
       });
     } catch (err) {
       setError(err.response?.data?.message || "Failed to load application.");
@@ -86,6 +88,7 @@ export function EditApplicationPage() {
         status: formData.status,
         appliedDate: new Date(formData.appliedDate).toISOString(),
         notes: formData.notes.trim(),
+        resumeLink: formData.resumeLink.trim(),
       });
 
       // Success - redirect to dashboard
@@ -226,6 +229,23 @@ export function EditApplicationPage() {
                 style={styles.textarea}
                 disabled={isSubmitting}
                 rows="4"
+              />
+            </div>
+
+            {/* Resume Link */}
+            <div style={styles.formGroup}>
+              <label htmlFor="resumeLink" style={styles.label}>
+                Resume Link
+              </label>
+              <input
+                type="url"
+                id="resumeLink"
+                name="resumeLink"
+                placeholder="e.g., https://docs.google.com/document/d/..."
+                value={formData.resumeLink}
+                onChange={handleChange}
+                style={styles.input}
+                disabled={isSubmitting}
               />
             </div>
 

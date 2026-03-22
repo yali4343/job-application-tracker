@@ -31,7 +31,6 @@ export function LoginPage() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h1 style={styles.heading}>Welcome back</h1>
         <p style={styles.subheading}>Sign in to your account</p>
 
         {error && <div style={styles.error}>{error}</div>}
