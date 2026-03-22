@@ -19,11 +19,10 @@ export function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-content">
-        {/* Left section - Brand */}
+        {/* Left section - Home button */}
         <div className="navbar-left">
-          <Link to="/" className="navbar-brand">
-            <span className="navbar-brand-icon">📊</span>
-            <span className="navbar-brand-text">Job Tracker</span>
+          <Link to="/" className="navbar-button navbar-home">
+            Home
           </Link>
         </div>
 

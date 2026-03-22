@@ -41,12 +41,20 @@
   padding: 0 var(--space-6);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: var(--space-6);
 }
 
 /* Left section - Brand/text with distinctive styling */
 .footer-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: fit-content;
+}
+
+/* Right section - Social icons container */
+.footer-right {
   display: flex;
   align-items: center;
   gap: var(--space-4);

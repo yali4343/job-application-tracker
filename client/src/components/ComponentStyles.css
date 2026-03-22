@@ -20,7 +20,11 @@
    ============================================================================ */
 
 .application-card {
-  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-primary) 0%,
+    var(--color-bg-secondary) 100%
+  );
   border: 2px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
@@ -30,7 +34,7 @@
 }
 
 .application-card::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -54,7 +58,11 @@
 }
 
 .application-card-header {
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-tertiary) 100%
+  );
   padding: var(--space-6);
   display: flex;
   justify-content: space-between;
@@ -107,13 +115,21 @@
 }
 
 .application-status-badge.interview {
-  background: linear-gradient(135deg, var(--color-growth-light) 0%, var(--color-info-light) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-growth-light) 0%,
+    var(--color-info-light) 100%
+  );
   color: var(--color-growth);
   border: 1px solid var(--color-growth);
 }
 
 .application-status-badge.offer {
-  background: linear-gradient(135deg, var(--color-growth-light) 0%, var(--color-success-light) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-growth-light) 0%,
+    var(--color-success-light) 100%
+  );
   color: var(--color-success);
   border: 1px solid var(--color-success);
   box-shadow: var(--shadow-sm);
@@ -183,7 +199,11 @@
    ============================================================================ */
 
 .application-card-footer {
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-tertiary) 100%
+  );
   padding: var(--space-5);
   display: flex;
   gap: var(--space-3);
@@ -204,7 +224,11 @@
 .application-loading {
   padding: var(--space-8);
   text-align: center;
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-tertiary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-tertiary) 100%
+  );
   border-radius: var(--radius-lg);
   border: 2px dashed var(--color-border);
   color: var(--color-text-tertiary);
@@ -213,7 +237,11 @@
 
 .application-empty-state {
   padding: var(--space-10) var(--space-8);
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-accent) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-accent) 100%
+  );
   border-radius: var(--radius-lg);
   border: 2px solid var(--color-border);
   text-align: center;
@@ -222,7 +250,7 @@
 }
 
 .application-empty-state::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -261,7 +289,11 @@
   align-items: flex-end;
   margin-bottom: var(--space-6);
   padding: var(--space-6);
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg-accent) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-secondary) 0%,
+    var(--color-bg-accent) 100%
+  );
   border-radius: var(--radius-lg);
   border: 2px solid var(--color-border);
   box-shadow: var(--shadow-sm);
@@ -325,20 +357,31 @@
 
 .dashboard-container {
   min-height: 100vh;
-  background: linear-gradient(180deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-primary) 0%,
+    var(--color-bg-secondary) 100%
+  );
   display: flex;
   flex-direction: column;
 }
 
 .dashboard-header {
-  background: linear-gradient(135deg, var(--color-bg-primary) 0%, var(--color-bg-secondary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-primary) 0%,
+    var(--color-bg-secondary) 100%
+  );
   border-bottom: 2px solid var(--color-border);
-  padding: var(--space-8);
+  padding: var(--space-6);
   display: flex;
-  justify-content: space-between;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
   box-shadow: var(--shadow-sm);
   animation: slideInDown 0.4s var(--ease-out);
+  flex-wrap: nowrap;
 }
 
 .dashboard-header h1 {
@@ -350,10 +393,13 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-}
 
 .dashboard-header-content {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .dashboard-title {
@@ -361,12 +407,17 @@
   font-weight: var(--weight-bold);
   color: var(--color-text-primary);
   margin: 0;
+  line-height: 1.2;
 }
 
 .dashboard-subtitle {
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
-  margin: var(--space-1) 0 0 0;
+  margin: 0;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dashboard-logout-btn {
@@ -374,6 +425,8 @@
   background: var(--color-error);
   color: var(--color-bg-primary);
   border: 1px solid var(--color-error);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .dashboard-main {
@@ -650,6 +703,52 @@
 
 .form-error-close:hover {
   opacity: 0.7;
+}
+
+/* ============================================================================
+   RESPONSIVE: Dashboard Header Adjustments
+   ============================================================================ */
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .dashboard-header {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .dashboard-title {
+    font-size: var(--text-2xl);
+  }
+
+  .dashboard-subtitle {
+    font-size: var(--text-xs);
+  }
+
+  .dashboard-logout-btn {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .dashboard-header {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  .dashboard-title {
+    font-size: var(--text-lg);
+  }
+
+  .dashboard-subtitle {
+    display: none;
+  }
+
+  .dashboard-logout-btn {
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--text-xs);
+  }
 }
 
 .form {

@@ -9,9 +9,13 @@ export function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
-        {/* Left section - Contact text and buttons */}
+        {/* Left section - "Let's connect" text */}
         <div className="footer-left">
           <p className="footer-text">Let's connect</p>
+        </div>
+
+        {/* Right section - Social icons */}
+        <div className="footer-right">
           <div className="footer-buttons-group">
             {/* Email */}
             <a

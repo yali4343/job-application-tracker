@@ -48,63 +48,27 @@
   gap: var(--space-6);
 }
 
-/* Left section - Brand with bold, distinctive styling */
+/* Left section - Home button */
 .navbar-left {
   display: flex;
   align-items: center;
+  gap: var(--space-3);
   min-width: fit-content;
 }
 
-.navbar-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
-  text-decoration: none;
-  color: var(--color-text-primary);
-  transition: all var(--duration-base) var(--ease-out);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  position: relative;
-}
-
-.navbar-brand::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
-  opacity: 0;
-  border-radius: var(--radius-md);
-  transition: opacity var(--duration-base) var(--ease-out);
-  z-index: -1;
-}
-
-.navbar-brand:hover {
-  color: var(--color-accent);
-}
-
-.navbar-brand:hover::before {
-  opacity: 0.1;
-}
-
-.navbar-brand-icon {
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.navbar-brand-text {
-  font-size: var(--text-xl);
+.navbar-home {
+  font-size: var(--text-sm);
   font-weight: var(--weight-bold);
-  letter-spacing: 0.5px;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-primary);
+}
+
+.navbar-home:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
 
 /* Center section - Navigation links with underline animation */
@@ -112,8 +76,9 @@
   display: flex;
   align-items: center;
   gap: var(--space-6);
-  flex: 1;
+  flex: 0 1 auto;
   justify-content: center;
+  margin: 0 var(--space-6);
 }
 
 .navbar-link {
