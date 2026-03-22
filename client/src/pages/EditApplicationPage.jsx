@@ -212,15 +212,15 @@ export function EditApplicationPage() {
               </select>
             </div>
 
-            {/* Notes */}
+            {/* Job Description */}
             <div style={styles.formGroup}>
               <label htmlFor="notes" style={styles.label}>
-                Notes
+                Job Description
               </label>
               <textarea
                 id="notes"
                 name="notes"
-                placeholder="Add any notes about this application..."
+                placeholder="Add the job description..."
                 value={formData.notes}
                 onChange={handleChange}
                 style={styles.textarea}
