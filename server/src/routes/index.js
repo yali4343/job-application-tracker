@@ -1,10 +1,12 @@
 import { Router } from "express";
 import authRoutes from "./authRoutes.js";
+import applicationRoutes from "./applicationRoutes.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
 router.use("/auth", authRoutes);
+router.use("/applications", applicationRoutes);
 
 // Protected health check (for testing auth middleware)
 router.get("/health", verifyToken, (req, res) => {

@@ -9,6 +9,7 @@
     "start": "node src/server.js",
     "test": "jest",
     "test:auth": "jest tests/auth.middleware.test.js",
+    "test:applications": "jest tests/applications.test.js",
     "test:watch": "jest --watch"
   },
   "keywords": [],
