@@ -671,3 +671,170 @@ describe("Application Controller - GET /applications", () => {
     });
   });
 });
+
+describe("Application Controller - GET /applications/:id", () => {
+  let applicationId;
+
+  /**
+   * Setup: Create a test application to use in tests
+   */
+  beforeAll(async () => {
+    const response = await request(app)
+      .post("/api/applications")
+      .set("Authorization", `Bearer ${authToken}`)
+      .send({
+        company: "TestCorp",
+        position: "Test Engineer",
+        status: "APPLIED",
+        appliedDate: "2026-03-22",
+        notes: "Test application for GET/:id tests",
+      });
+
+    expect(response.status).toBe(201);
+    applicationId = response.body.application.id;
+  });
+
+  describe("Authentication", () => {
+    it("should return 401 without Authorization header", async () => {
+      const response = await request(app).get(
+        `/api/applications/${applicationId}`,
+      );
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Authorization header missing",
+      );
+    });
+
+    it("should return 401 with invalid token", async () => {
+      const response = await request(app)
+        .get(`/api/applications/${applicationId}`)
+        .set("Authorization", "Bearer invalid.jwt.token");
+
+      expect(response.status).toBe(401);
+      expect(response.body).toHaveProperty("message", "Invalid token");
+    });
+  });
+
+  describe("Validation", () => {
+    it("should return 400 when id is not a valid positive number", async () => {
+      const response = await request(app)
+        .get("/api/applications/abc")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Application ID must be a valid positive number",
+      );
+    });
+
+    it("should return 400 when id is zero", async () => {
+      const response = await request(app)
+        .get("/api/applications/0")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Application ID must be a valid positive number",
+      );
+    });
+
+    it("should return 400 when id is negative", async () => {
+      const response = await request(app)
+        .get("/api/applications/-5")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(400);
+      expect(response.body).toHaveProperty(
+        "message",
+        "Application ID must be a valid positive number",
+      );
+    });
+  });
+
+  describe("Successful retrieval", () => {
+    it("should return 200 and the correct application when it exists and belongs to the user", async () => {
+      const response = await request(app)
+        .get(`/api/applications/${applicationId}`)
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty("application");
+      expect(response.body.application.id).toBe(applicationId);
+      expect(response.body.application.company).toBe("TestCorp");
+      expect(response.body.application.position).toBe("Test Engineer");
+      expect(response.body.application.status).toBe("APPLIED");
+      expect(response.body.application.notes).toBe(
+        "Test application for GET/:id tests",
+      );
+      expect(response.body.application).toHaveProperty("createdAt");
+      expect(response.body.application).toHaveProperty("updatedAt");
+    });
+  });
+
+  describe("Not found scenarios", () => {
+    it("should return 404 when application does not exist for this user", async () => {
+      const response = await request(app)
+        .get("/api/applications/999999")
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty("message", "Application not found");
+    });
+
+    it("should return 404 when application exists but belongs to another user", async () => {
+      // Create another user
+      const otherUser = {
+        name: "Other User",
+        email: `otheruser-${Date.now()}@test.com`,
+        password: "password123",
+      };
+
+      const registerRes = await request(app)
+        .post("/api/auth/register")
+        .send(otherUser);
+
+      expect(registerRes.status).toBe(201);
+      const otherUserId = registerRes.body.user.id;
+
+      const loginRes = await request(app).post("/api/auth/login").send({
+        email: otherUser.email,
+        password: otherUser.password,
+      });
+
+      const otherToken = loginRes.body.token;
+
+      // Create an application for the other user
+      const appRes = await request(app)
+        .post("/api/applications")
+        .set("Authorization", `Bearer ${otherToken}`)
+        .send({
+          company: "SecretCorp",
+          position: "Secret Role",
+          appliedDate: "2026-03-22",
+        });
+
+      expect(appRes.status).toBe(201);
+      const otherAppId = appRes.body.application.id;
+
+      // Try to get the other user's application with our token
+      const response = await request(app)
+        .get(`/api/applications/${otherAppId}`)
+        .set("Authorization", `Bearer ${authToken}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toHaveProperty("message", "Application not found");
+
+      // Cleanup
+      await prisma.application.deleteMany({
+        where: { userId: otherUserId },
+      });
+      await prisma.user.delete({
+        where: { id: otherUserId },
+      });
+    });
+  });
+});

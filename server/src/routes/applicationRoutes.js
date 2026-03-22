@@ -2,15 +2,19 @@ import { Router } from "express";
 import {
   createApplication,
   getApplications,
+  getApplication,
 } from "../controllers/applicationController.js";
 import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
+// POST /api/applications - Create a new application (requires authentication)
+router.post("/", verifyToken, createApplication);
+
 // GET /api/applications - Get all applications of authenticated user (requires authentication)
 router.get("/", verifyToken, getApplications);
 
-// POST /api/applications - Create a new application (requires authentication)
-router.post("/", verifyToken, createApplication);
+// GET /api/applications/:id - Get a single application by id (requires authentication)
+router.get("/:id", verifyToken, getApplication);
 
 export default router;

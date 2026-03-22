@@ -135,3 +135,54 @@ export async function getApplications(req, res, next) {
     next(error);
   }
 }
+
+/**
+ * Get a single application by id
+ * Only returns the application if it belongs to the authenticated user
+ * Returns 404 if not found or belongs to another user (do not expose existence)
+ */
+export async function getApplication(req, res, next) {
+  try {
+    const { id } = req.params;
+    const userId = req.user.userId;
+
+    // Validate and parse id
+    const parsedId = Number(id);
+    if (Number.isNaN(parsedId) || parsedId <= 0) {
+      return res.status(400).json({
+        message: "Application ID must be a valid positive number",
+      });
+    }
+
+    // Find application by id AND userId (security: don't expose existence of other users' apps)
+    const application = await prisma.application.findFirst({
+      where: {
+        id: parsedId,
+        userId,
+      },
+      select: {
+        id: true,
+        company: true,
+        position: true,
+        status: true,
+        appliedDate: true,
+        notes: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    // Return 404 if not found or belongs to another user
+    if (!application) {
+      return res.status(404).json({
+        message: "Application not found",
+      });
+    }
+
+    return res.status(200).json({
+      application,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
