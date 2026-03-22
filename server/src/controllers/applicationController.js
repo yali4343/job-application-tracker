@@ -46,8 +46,17 @@ export async function createApplication(req, res, next) {
     const cleanCompany = company.trim();
     const cleanPosition = position.trim();
     const cleanNotes = notes ? notes.trim() : null;
-    const cleanResumeLink = resumeLink ? resumeLink.trim() : null;
 
+    let cleanResumeLink = null;
+    if (resumeLink !== undefined && resumeLink !== null) {
+      if (typeof resumeLink !== "string") {
+        return res
+          .status(400)
+          .json({ message: "resumeLink must be a string if provided" });
+      }
+      const trimmedResumeLink = resumeLink.trim();
+      cleanResumeLink = trimmedResumeLink === "" ? null : trimmedResumeLink;
+    }
     // Create application with Prisma
     const application = await prisma.application.create({
       data: {
@@ -275,12 +284,31 @@ export async function updateApplication(req, res, next) {
 
     // Add notes if provided (can be null or string, trim if string)
     if (notes !== undefined) {
-      updateData.notes = notes ? notes.trim() : null;
+      if (typeof notes === "string") {
+        const trimmedNotes = notes.trim();
+        updateData.notes = trimmedNotes === "" ? null : trimmedNotes;
+      } else if (notes === null) {
+        updateData.notes = null;
+      } else {
+        return res
+          .status(400)
+          .json({ message: "Invalid notes format. Must be a string or null." });
+      }
     }
 
     // Add resumeLink if provided (can be null or string, trim if string)
     if (resumeLink !== undefined) {
-      updateData.resumeLink = resumeLink ? resumeLink.trim() : null;
+      if (typeof resumeLink === "string") {
+        const trimmedResumeLink = resumeLink.trim();
+        updateData.resumeLink =
+          trimmedResumeLink === "" ? null : trimmedResumeLink;
+      } else if (resumeLink === null) {
+        updateData.resumeLink = null;
+      } else {
+        return res.status(400).json({
+          message: "Invalid resumeLink format. Must be a string or null.",
+        });
+      }
     }
 
     // If no fields to update, return current application

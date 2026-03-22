@@ -8,7 +8,7 @@ Fixed the "Edit application" button to enable real edit functionality instead of
 
 #### 1. **Created EditApplicationPage.jsx**
 
-- **Location:** `client/src/pages/EditApplicationPage.jsx` (new 336-line component)
+- **Location:** `client/src/pages/EditApplicationPage.jsx`
 - **Purpose:** Dedicated page for editing existing applications
 - **Features:**
   - Loads application data on mount via GET /applications/:id
@@ -69,7 +69,7 @@ User Click Edit Button
 
 ### Backend Testing
 
-✅ PUT /applications endpoint: 40 tests passing
+✅ PUT /api/applications/:id endpoint: 40 tests passing
 ✅ All CRUD endpoints: 132 tests passing (all test suites pass)
 
 ### Key Implementation Details
