@@ -69,3 +69,5 @@ pids/
 *.pid.lock
 .env.production.local
 *.tsbuildinfo
+.vercel
+.env*.local

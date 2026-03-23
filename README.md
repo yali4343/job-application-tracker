@@ -8,7 +8,7 @@ Track applications, monitor their progress, and stay organized during your job s
 
 ## Live Demo
 
-> The application is currently deployed and live at https://job-application-tracker-virid-delta.vercel.app/
+> The application is currently deployed and live at https://job-application-tracker-yali4343s-projects.vercel.app/
 
 **Infrastructure:**
 
