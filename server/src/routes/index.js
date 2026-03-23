@@ -9,8 +9,8 @@ router.use("/auth", authRoutes);
 router.use("/applications", applicationRoutes);
 
 // Protected health check (for testing auth middleware)
-router.get("/health", verifyToken, (req, res) => {
-  res.json({ status: "OK", user: req.user });
+router.get("/protected-test", verifyToken, (req, res) => {
+  res.status(200).json({ message: "Access granted" });
 });
 
 // Protected test route (for auth middleware validation)
